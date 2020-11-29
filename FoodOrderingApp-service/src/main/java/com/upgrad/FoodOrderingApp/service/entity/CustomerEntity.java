@@ -31,9 +31,10 @@ import org.apache.commons.lang3.builder.ToStringStyle;
     @NamedQuery(name = CustomerEntity.COUNT_BY_ALL, query = "select count(u.id) from "
         + "CustomerEntity u"),
     @NamedQuery(name = CustomerEntity.BY_ALL, query = "select u from CustomerEntity u"),
-    @NamedQuery(name = CustomerEntity.BY_EMAIL, query = "select u from CustomerEntity u where u"
-        + ".email "
-        + "= :email")
+    @NamedQuery(name = CustomerEntity.BY_CONTACTNUMBER, query = "select u from CustomerEntity u "
+        + "where u"
+        + ".contact_number "
+        + "= :contactNumber")
 })
 
 public class CustomerEntity implements Entity, Identifier<Integer>,
@@ -43,6 +44,7 @@ public class CustomerEntity implements Entity, Identifier<Integer>,
   public static final String COUNT_BY_ALL = "CustomerEntity.countByAll";
   public static final String BY_ALL = "CustomerEntity.byAll";
   public static final String BY_EMAIL = "CustomerEntity.byEmail";
+  public static final String BY_CONTACTNUMBER = "CustomerEntity.byContactNumber";
 
   @Id
   @Column(name = "id")
