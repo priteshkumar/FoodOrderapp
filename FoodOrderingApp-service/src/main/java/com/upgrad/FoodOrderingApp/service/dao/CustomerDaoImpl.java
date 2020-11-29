@@ -5,10 +5,12 @@
  * Date: May 5, 2018
  * Author: Thribhuvan Krishnamurthy
  */
-package upgrad.movieapp.service.Customer.dao;
 
+package com.upgrad.FoodOrderingApp.service.dao;
+/*
 import com.upgrad.FoodOrderingApp.service.dao.BaseDaoImpl;
 import com.upgrad.FoodOrderingApp.service.dao.CustomerDao;
+import com.upgrad.FoodOrderingApp.service.dao.CustomerDaoV1;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
 import java.util.List;
 import javax.persistence.NoResultException;
@@ -17,15 +19,16 @@ import org.springframework.stereotype.Repository;
 
 /**
  * Implementation of {@link CustomerDao}.
- */
+
+/*
 @Repository
-public class CustomerDaoImpl extends BaseDaoImpl<CustomerEntity> implements CustomerDao {
+public class CustomerDaoImpl extends BaseDaoImpl<CustomerEntity> implements CustomerDaoV1 {
 
   @Override
-  public CustomerEntity findByEmail(final String email) {
+  public CustomerEntity findByContactNumber(final String contactNumber) {
     try {
-      return entityManager.createNamedQuery(CustomerEntity.BY_EMAIL, CustomerEntity.class)
-          .setParameter("email", email).getSingleResult();
+      return entityManager.createNamedQuery(CustomerEntity.BY_CONTACTNUMBER, CustomerEntity.class)
+          .setParameter("contact_number", contactNumber).getSingleResult();
     } catch (NoResultException noResultExc) {
       return null;
     }
@@ -49,6 +52,6 @@ public class CustomerDaoImpl extends BaseDaoImpl<CustomerEntity> implements Cust
                                             .setParameter("status", CustomerStatus.name())
                                             .setFirstResult(getOffset(page, limit)).setMaxResults(limit).getResultList();
         return new SearchResult(totalCount, payload);
-    }*/
+    }
 
-}
+}*/

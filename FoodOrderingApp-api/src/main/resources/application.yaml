@@ -2,7 +2,7 @@ server:
   servlet:
     port: 8080
     contextPath: /api
-
+debug: true
 spring:
 
   application:

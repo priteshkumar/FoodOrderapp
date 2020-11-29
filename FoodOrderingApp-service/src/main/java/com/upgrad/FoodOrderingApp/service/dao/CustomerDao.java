@@ -1,25 +1,71 @@
-/*
- * Copyright 2018-2019, https://beingtechie.io.
- *
- * File: CustomerDao.java
- * Date: May 5, 2018
- * Author: Thribhuvan Krishnamurthy
- */
 package com.upgrad.FoodOrderingApp.service.dao;
 
 import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
-import javax.validation.constraints.NotNull;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+import org.springframework.stereotype.Repository;
 
 /**
- * DAO abstraction for {@link CustomerEntity}.
+ * Repository bean for CustomerEntity
  */
-public interface CustomerDao extends BaseDao<CustomerEntity> {
+@Repository
+public class CustomerDao {
 
-  CustomerEntity findByEmail(@NotNull String email);
+  @PersistenceContext
+  EntityManager entityManager;
 
-  // SearchResult<CustomerEntity> findCustomers(CustomerStatus CustomerStatus, int offset,
-  //   int limit);
+  public CustomerEntity create(CustomerEntity CustomerEntity) {
+    entityManager.persist(CustomerEntity);
+    return CustomerEntity;
+  }
 
-  //SearchResult<CustomerEntity> findCustomers(int offset, int limit);
+  public void deleteUser(CustomerEntity CustomerEntity) {
+    entityManager.remove(CustomerEntity);
+  }
+  /*
+  public CustomerEntity getUserByUserName(String userName) {
+    try {
+      return entityManager.createNamedQuery("userByUserName", CustomerEntity.class).setParameter(
+          "userName", userName).getSingleResult();
+    } catch (NoResultException e) {
+      return null;
+    }
+  }*/
 
+  public CustomerEntity findByContactNumber(String contactNumber) {
+    try {
+      return entityManager.createNamedQuery(CustomerEntity.BY_CONTACTNUMBER, CustomerEntity.class).setParameter(
+          "contactNumber", contactNumber).getSingleResult();
+    } catch (NoResultException e) {
+      return null;
+    }
+  }
+
+  public CustomerEntity findByUUID(String uuid) {
+    try {
+      return entityManager.createNamedQuery("customerByUuid", CustomerEntity.class).setParameter(
+          "uuid", uuid).getSingleResult();
+    } catch (NoResultException e) {
+      return null;
+    }
+  }
+  /*
+  public UserAuthEntity createUserAuth(UserAuthEntity userAuthEntity) {
+    entityManager.persist(userAuthEntity);
+    return userAuthEntity;
+  }
+
+  public UserAuthEntity getUserAuth(String accessToken) {
+    try {
+      return entityManager.createNamedQuery("userAuthTokenByAccessToken", UserAuthEntity.class)
+          .setParameter("accessToken", accessToken).getSingleResult();
+    } catch (NoResultException e) {
+      return null;
+    }
+  }
+
+  public void updateUserAuth(UserAuthEntity userAuthEntity) {
+    entityManager.merge(userAuthEntity);
+  }*/
 }

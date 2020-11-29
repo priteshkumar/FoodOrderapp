@@ -8,6 +8,7 @@
 package com.upgrad.FoodOrderingApp.service.businness;
 
 import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
+import com.upgrad.FoodOrderingApp.service.exception.SignUpRestrictedException;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -15,18 +16,14 @@ import javax.validation.constraints.NotNull;
  */
 public interface CustomerService {
 
-  //SearchResult<CustomerEntity> findUsers(int page, int limit);
-
-  //SearchResult<CustomerEntity> findUsers(UserStatus userStatus, int page, int limit);
-
-  CustomerEntity findCustomerByEmail(@NotNull String emailAddress);
+  //CustomerEntity findCustomerByEmail(@NotNull String emailAddress);
 
   CustomerEntity findCustomerByUuid(@NotNull String userUuid);
 
   //CustomerEntity createUser(@NotNull CustomerEntity newUser, @NotNull Integer roleUuid)
   // throws ApplicationException;
 
-  CustomerEntity createCustomer(@NotNull CustomerEntity newUser);
+  CustomerEntity saveCustomer(@NotNull CustomerEntity newUser) throws SignUpRestrictedException;
 
   void updateCustomer(@NotNull String userUuid, @NotNull CustomerEntity updatedUser);
 
