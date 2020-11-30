@@ -8,6 +8,10 @@
  */
 package com.upgrad.FoodOrderingApp.api.controller.provider;
 
+import static com.upgrad.FoodOrderingApp.api.controller.data.ResourceConstants.BASIC_AUTH_PREFIX;
+import static com.upgrad.FoodOrderingApp.api.controller.data.ResourceConstants.BEARER_AUTH_PREFIX;
+
+import com.upgrad.FoodOrderingApp.service.exception.AuthenticationFailedException;
 import java.util.Base64;
 
 /**
@@ -15,12 +19,21 @@ import java.util.Base64;
  */
 public final class BasicAuthDecoder {
 
-  private final String username;
-  private final String password;
+  private String username;
+  private String password;
 
-  public BasicAuthDecoder(final String base64EncodedCredentials) {
+  public BasicAuthDecoder(final String base64EncodedCredentials)
+      throws AuthenticationFailedException {
+    if (!base64EncodedCredentials.startsWith(BASIC_AUTH_PREFIX)) {
+      throw new AuthenticationFailedException("ATH-003",
+          "Incorrect format of decoded customer name and password");
+    }
     final String[] base64Decoded = new String(
         Base64.getDecoder().decode(base64EncodedCredentials.split("Basic ")[1])).split(":");
+    if (base64Decoded.length != 2) {
+      throw new AuthenticationFailedException("ATH-003",
+          "Incorrect format of decoded customer name and password");
+    }
     this.username = base64Decoded[0];
     this.password = base64Decoded[1];
   }

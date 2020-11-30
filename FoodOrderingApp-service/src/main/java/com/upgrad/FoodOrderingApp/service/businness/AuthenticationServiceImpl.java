@@ -1,32 +1,18 @@
-/*
- * Copyright 2018-2019, https://beingtechie.io.
- *
- * File: AuthenticationServiceImpl.java
- * Date: May 5, 2018
- * Author: Thribhuvan Krishnamurthy
- */
 package com.upgrad.FoodOrderingApp.service.businness;
 
-/*
+import com.upgrad.FoodOrderingApp.service.dao.CustomerDao;
+import com.upgrad.FoodOrderingApp.service.entity.CustomerAuthEntity;
+import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
+import com.upgrad.FoodOrderingApp.service.exception.AuthenticationFailedException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import upgrad.movieapp.service.common.exception.ApplicationException;
-import upgrad.movieapp.service.common.exception.AuthenticationFailedException;
-import upgrad.movieapp.service.common.exception.EntityNotFoundException;
-import upgrad.movieapp.service.user.dao.UserDao;
-import upgrad.movieapp.service.user.entity.UserAuthTokenEntity;
-import upgrad.movieapp.service.user.entity.UserEntity;
-import upgrad.movieapp.service.user.exception.UserErrorCode;
-import upgrad.movieapp.service.user.model.AuthorizedUser;
-import upgrad.movieapp.service.user.model.UserRole;
-import upgrad.movieapp.service.user.model.UserStatus;
-import upgrad.movieapp.service.user.provider.PasswordCryptographyProvider;
 
 /**
  * Implementation of {@link AuthenticationService}.
-
+ */
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
 
@@ -34,73 +20,39 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   private PasswordCryptographyProvider passwordCryptographyProvider;
 
   @Autowired
-  private UserService userService;
+  private CustomerService customerService;
 
   @Autowired
   private AuthTokenService authTokenService;
 
   @Autowired
-  private UserDao userDao;
+  private CustomerDao customerDao;
 
   @Override
   @Transactional(propagation = Propagation.REQUIRED)
-  public AuthorizedUser authenticate(final String username, final String password)
-      throws ApplicationException {
+  public CustomerAuthEntity authenticate(final String contactNumber, final String password)
+      throws AuthenticationFailedException {
 
-    UserEntity userEntity;
-    try {
-      userEntity = userService.findUserByEmail(username);
-    } catch (EntityNotFoundException e) {
-      throw new AuthenticationFailedException(UserErrorCode.USR_002);
+    if (StringUtils.isEmpty(contactNumber) || StringUtils.isEmpty(password)) {
+      throw new AuthenticationFailedException("ATH-003", "Incorrect format of decoded customer "
+          + "name and password");
     }
 
-    if (UserStatus.LOCKED == UserStatus.valueOf(userEntity.getStatus())) {
-      throw new AuthenticationFailedException(UserErrorCode.USR_007);
-    } else if (UserStatus.INACTIVE == UserStatus.valueOf(userEntity.getStatus())) {
-      throw new AuthenticationFailedException(UserErrorCode.USR_008);
-    } else {
-      final String encryptedPassword = passwordCryptographyProvider
-          .encrypt(password, userEntity.getSalt());
-      if (!userEntity.getPassword().equals(encryptedPassword)) {
-        int failedLoginCount = userEntity.getFailedLoginCount();
-        if (failedLoginCount == 5) {
-          userEntity.setStatus(UserStatus.LOCKED.name());
-        } else if (userEntity.getFailedLoginCount() <= 5) {
-          failedLoginCount++;
-          userEntity.setFailedLoginCount(failedLoginCount);
-        }
-        userDao.update(userEntity);
-        throw new AuthenticationFailedException(UserErrorCode.USR_003);
-      }
-
-      if (userEntity.getFailedLoginCount() > 0) {
-        userEntity.setFailedLoginCount(0);
-        userDao.update(userEntity);
-      }
-
-      UserAuthTokenEntity userAuthToken = authTokenService.issueToken(userEntity);
-      return authorizedUser(userEntity, userAuthToken);
+    CustomerEntity customerEntity;
+    customerEntity = customerService.findCustomerByContactNumber(contactNumber);
+    if (customerEntity == null) {
+      throw new AuthenticationFailedException("ATH-001",
+          "This contact number has not been registered!");
     }
 
-  }
-
-  private AuthorizedUser authorizedUser(final UserEntity userEntity,
-      final UserAuthTokenEntity userAuthToken) {
-    final AuthorizedUser authorizedUser = new AuthorizedUser();
-    authorizedUser.setId(userEntity.getUuid());
-    authorizedUser.setFirstName(userEntity.getFirstName());
-    authorizedUser.setLastName(userEntity.getLastName());
-    authorizedUser.setEmailAddress(userEntity.getEmail());
-    authorizedUser.setMobilePhoneNumber(userEntity.getMobilePhone());
-    authorizedUser.setLastLoginTime(userEntity.getLastLoginAt());
-    authorizedUser.setStatus(UserStatus.valueOf(userEntity.getStatus()));
-    authorizedUser.setAccessToken(userAuthToken.getAccessToken());
-    if (userEntity.getRole() != null) {
-      authorizedUser
-          .setRole(new UserRole(userEntity.getRole().getUuid(), userEntity.getRole().getName()));
+    final String encryptedPassword = passwordCryptographyProvider
+        .encrypt(password, customerEntity.getSalt());
+    if (!customerEntity.getPassword().equals(encryptedPassword)) {
+      throw new AuthenticationFailedException("ATH-002", "Invalid Credentials");
     }
-    return authorizedUser;
+
+    CustomerAuthEntity customerAuthEntity = authTokenService.issueToken(customerEntity);
+    return customerAuthEntity;
   }
 
 }
-*/

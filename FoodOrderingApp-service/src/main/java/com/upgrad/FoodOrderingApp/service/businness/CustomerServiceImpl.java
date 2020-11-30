@@ -1,7 +1,9 @@
 package com.upgrad.FoodOrderingApp.service.businness;
 
 import com.upgrad.FoodOrderingApp.service.dao.CustomerDao;
+import com.upgrad.FoodOrderingApp.service.entity.CustomerAuthEntity;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
+import com.upgrad.FoodOrderingApp.service.exception.AuthenticationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.SignUpRestrictedException;
 import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
@@ -14,31 +16,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class CustomerServiceImpl implements CustomerService {
 
   @Autowired
+  private AuthenticationService authenticationService;
+
+  @Autowired
   private CustomerDao customerDao;
 
   @Autowired
   private PasswordCryptographyProvider passwordCryptographyProvider;
-
-  /*@Override
-  public SearchResult<CustomerEntity> findUsers(int page, int limit) {
-    return customerDao.findUsers(page, limit);
-  }*/
-
-  /*@Override
-  public SearchResult<CustomerEntity> findUsers(UserStatus userStatus, int page, int limit) {
-    return customerDao.findUsers(userStatus, page, limit);
-  }*/
-  /*
-  @Override
-  @Transactional(propagation = Propagation.SUPPORTS)
-  public CustomerEntity findCustomerByEmail(final String emailAddress) {
-
-    final CustomerEntity CustomerEntity = customerDao.findByEmail(emailAddress);
-    if (CustomerEntity == null) {
-      //throw new EntityNotFoundException(UserErrorCode.USR_002, emailAddress);
-    }
-    return CustomerEntity;
-  }*/
 
   @Override
   @Transactional(propagation = Propagation.SUPPORTS)
@@ -51,21 +35,16 @@ public class CustomerServiceImpl implements CustomerService {
     return CustomerEntity;
   }
 
-  /*@Override
-  @Transactional(propagation = Propagation.REQUIRED)
-  public CustomerEntity createUser(final CustomerEntity newUser, final Integer roleUuid)
-      throws ApplicationException {
+  @Override
+  @Transactional(propagation = Propagation.SUPPORTS)
+  public CustomerEntity findCustomerByContactNumber(final String contactNumber) {
 
-    final CustomerEntity existingUser = customerDao.findByEmail(newUser.getEmail());
-    if (existingUser != null) {
-      throw new ApplicationException(UserErrorCode.USR_009, newUser.getEmail());
+    final CustomerEntity CustomerEntity = customerDao.findByContactNumber(contactNumber);
+    if (CustomerEntity == null) {
+      //throw new EntityNotFoundException(UserErrorCode.USR_001, userUuid);
     }
-    encryptPassword(newUser);
-    newUser.setSubscriptionsConsent(true);
-    newUser.setRole(roleService.findRoleByUuid(roleUuid));
-
-    return customerDao.create(newUser);
-  }*/
+    return CustomerEntity;
+  }
 
   @Override
   @Transactional(propagation = Propagation.REQUIRED)
@@ -92,6 +71,12 @@ public class CustomerServiceImpl implements CustomerService {
     }
     encryptPassword(newCustomer);
     return customerDao.create(newCustomer);
+  }
+
+  @Override
+  public CustomerAuthEntity authenticate(final String contactNumber, final String password)
+      throws AuthenticationFailedException {
+    return authenticationService.authenticate(contactNumber, password);
   }
 
   @Override
@@ -197,7 +182,7 @@ public class CustomerServiceImpl implements CustomerService {
   private boolean verifyContactNumber(final CustomerEntity newCustomer) {
     String contactNumber = newCustomer.getContact_number();
     String digitPattern = "^[0-9]{10}$";
-    if(Pattern.matches(digitPattern,contactNumber)){
+    if (Pattern.matches(digitPattern, contactNumber)) {
       return true;
     }
     return false;
