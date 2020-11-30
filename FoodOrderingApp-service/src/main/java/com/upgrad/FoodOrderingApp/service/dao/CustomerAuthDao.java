@@ -6,20 +6,18 @@
  * Author: Thribhuvan Krishnamurthy
  */
 package com.upgrad.FoodOrderingApp.service.dao;
-/*
+
+import com.upgrad.FoodOrderingApp.service.entity.CustomerAuthEntity;
 import java.time.ZonedDateTime;
 import javax.validation.constraints.NotNull;
 
-import upgrad.movieapp.service.common.dao.BaseDao;
-import upgrad.movieapp.service.user.entity.UserAuthTokenEntity;
-
 /**
- * DAO interface for {@link UserAuthTokenEntity}.
+ * DAO interface for {@link CustomerAuthEntity}.
+ */
+public interface CustomerAuthDao extends BaseDao<CustomerAuthEntity> {
 
-public interface UserAuthDao extends BaseDao<UserAuthTokenEntity> {
+  CustomerAuthEntity findToken(@NotNull String accessToken);
 
-    UserAuthTokenEntity findToken(@NotNull String accessToken);
+  CustomerAuthEntity findActiveTokenByUser(@NotNull long userId, @NotNull ZonedDateTime currentAt);
 
-    UserAuthTokenEntity findActiveTokenByUser(@NotNull long userId, @NotNull ZonedDateTime currentAt);
-
-}*/
+}

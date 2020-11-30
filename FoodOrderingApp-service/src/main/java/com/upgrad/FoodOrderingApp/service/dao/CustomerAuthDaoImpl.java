@@ -1,47 +1,40 @@
-/*
- * Copyright 2018-2019, https://beingtechie.io.
- *
- * File: UserAuthDaoImpl.java
- * Date: May 5, 2018
- * Author: Thribhuvan Krishnamurthy
- */
 package com.upgrad.FoodOrderingApp.service.dao;
-/*
-import static upgrad.movieapp.service.user.entity.UserAuthTokenEntity.BY_ACCESS_TOKEN;
-import static upgrad.movieapp.service.user.entity.UserAuthTokenEntity.BY_USER;
 
+import static com.upgrad.FoodOrderingApp.service.entity.CustomerAuthEntity.BY_ACCESS_TOKEN;
+import static com.upgrad.FoodOrderingApp.service.entity.CustomerAuthEntity.BY_CUSTOMER;
+import com.upgrad.FoodOrderingApp.service.entity.CustomerAuthEntity;
 import java.time.ZonedDateTime;
 import javax.persistence.NoResultException;
-
 import org.springframework.stereotype.Repository;
-import upgrad.movieapp.service.common.dao.BaseDaoImpl;
-import upgrad.movieapp.service.user.entity.UserAuthTokenEntity;
 
 /**
- * Implementation of {@link UserAuthDao}.
-
+ * Implementation of {@link CustomerAuthDao}.
+ */
 @Repository
-public class UserAuthDaoImpl extends BaseDaoImpl<UserAuthTokenEntity> implements UserAuthDao {
+public class CustomerAuthDaoImpl extends BaseDaoImpl<CustomerAuthEntity> implements
+    CustomerAuthDao {
 
-    @Override
-    public UserAuthTokenEntity findToken(final String accessToken) {
-        try {
-            return entityManager.createNamedQuery(BY_ACCESS_TOKEN, UserAuthTokenEntity.class).setParameter("accessToken", accessToken).getSingleResult();
-        } catch (NoResultException nre) {
-            return null;
-        }
+  @Override
+  public CustomerAuthEntity findToken(final String accessToken) {
+    try {
+      return entityManager.createNamedQuery(BY_ACCESS_TOKEN, CustomerAuthEntity.class)
+          .setParameter("accessToken", accessToken).getSingleResult();
+    } catch (NoResultException nre) {
+      return null;
     }
+  }
 
-    @Override
-    public UserAuthTokenEntity findActiveTokenByUser(final long userId, final ZonedDateTime currentAt) {
-        try {
-            return entityManager.createNamedQuery(BY_USER, UserAuthTokenEntity.class)
-                    .setParameter("userId", userId)
-                    .setParameter("currentAt", currentAt)
-                    .getSingleResult();
-        } catch (NoResultException nre) {
-            return null;
-        }
+  @Override
+  public CustomerAuthEntity findActiveTokenByUser(final long customerId,
+      final ZonedDateTime currentAt) {
+    try {
+      return entityManager.createNamedQuery(BY_CUSTOMER, CustomerAuthEntity.class)
+          .setParameter("customerId", customerId)
+          .setParameter("currentAt", currentAt)
+          .getSingleResult();
+    } catch (NoResultException nre) {
+      return null;
     }
+  }
 
-}*/
+}
