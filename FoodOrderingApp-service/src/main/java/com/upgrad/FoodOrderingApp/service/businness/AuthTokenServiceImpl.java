@@ -5,9 +5,9 @@ import com.upgrad.FoodOrderingApp.service.dao.CustomerAuthDao;
 import com.upgrad.FoodOrderingApp.service.dao.CustomerDao;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerAuthEntity;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
+import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
 import java.time.ZonedDateTime;
 import java.util.UUID;
-import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -50,23 +50,28 @@ public class AuthTokenServiceImpl implements AuthTokenService {
     return customerAuthDao.create(customerAuthEntity);
   }
 
-  /*
+
   @Override
   @Transactional(propagation = Propagation.REQUIRED)
-  public void invalidateToken(final String accessToken){
+  public CustomerAuthEntity invalidateToken(final String accessToken)
+      throws AuthorizationFailedException {
 
-    final UserAuthTokenEntity userAuthToken = userAuthDao.findToken(accessToken);
-    final UserAuthTokenVerifier tokenVerifier = new UserAuthTokenVerifier(userAuthToken);
-    if (tokenVerifier.isNotFound()) {
-      throw new AuthorizationFailedException(UserErrorCode.USR_005);
+    final CustomerAuthEntity customerAuthEntity = customerAuthDao.findToken(accessToken);
+    final CustomerAuthVerifier customerAuthVerifier = new CustomerAuthVerifier(customerAuthEntity);
+    if (customerAuthVerifier.isNotFound()) {
+      throw new AuthorizationFailedException("ATHR-001", "Customer is not Logged in.");
     }
-    if (tokenVerifier.hasExpired()) {
-      throw new AuthorizationFailedException(UserErrorCode.USR_006);
+    if (customerAuthVerifier.hasExpired()) {
+      throw new AuthorizationFailedException("ATHR-003",
+          "Your session is expired. Log in again to access this endpoint.");
     }
-
-    userAuthToken.setLogoutAt(DateTimeProvider.currentProgramTime());
-    userAuthDao.update(userAuthToken);
-  }*/
+    if (customerAuthVerifier.hasLoggedOut()) {
+      throw new AuthorizationFailedException("ATHR-002",
+          "Customer is logged out. Log in again to access this endpoint.");
+    }
+    customerAuthEntity.setLogoutAt(DateTimeProvider.currentProgramTime());
+    return customerAuthDao.update(customerAuthEntity);
+  }
 
   /*
   @Override
