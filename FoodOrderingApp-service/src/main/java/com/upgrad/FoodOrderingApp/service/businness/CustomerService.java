@@ -10,6 +10,7 @@ package com.upgrad.FoodOrderingApp.service.businness;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerAuthEntity;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
 import com.upgrad.FoodOrderingApp.service.exception.AuthenticationFailedException;
+import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.SignUpRestrictedException;
 import javax.validation.constraints.NotNull;
 
@@ -26,6 +27,8 @@ public interface CustomerService extends AuthenticationService {
 
   CustomerAuthEntity authenticate(@NotNull String contactNumber, @NotNull String password)
       throws AuthenticationFailedException;
+
+  CustomerAuthEntity logout(@NotNull String accessToken) throws AuthorizationFailedException;
 
   void updateCustomer(@NotNull String userUuid, @NotNull CustomerEntity updatedUser);
 

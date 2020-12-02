@@ -4,6 +4,7 @@ import com.upgrad.FoodOrderingApp.service.dao.CustomerDao;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerAuthEntity;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
 import com.upgrad.FoodOrderingApp.service.exception.AuthenticationFailedException;
+import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.SignUpRestrictedException;
 import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
@@ -79,6 +80,11 @@ public class CustomerServiceImpl implements CustomerService {
     return authenticationService.authenticate(contactNumber, password);
   }
 
+  @Override
+  public CustomerAuthEntity logout(final String accessToken)
+      throws AuthorizationFailedException {
+    return authenticationService.logout(accessToken);
+  }
   @Override
   @Transactional(propagation = Propagation.REQUIRED)
   public void updateCustomer(final String userUuid, final CustomerEntity updatedUser) {

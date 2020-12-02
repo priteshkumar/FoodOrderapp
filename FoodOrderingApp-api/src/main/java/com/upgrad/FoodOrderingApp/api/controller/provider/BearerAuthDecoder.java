@@ -9,8 +9,6 @@
 package com.upgrad.FoodOrderingApp.api.controller.provider;
 
 import static com.upgrad.FoodOrderingApp.api.controller.data.ResourceConstants.BEARER_AUTH_PREFIX;
-//import upgrad.movieapp.api.exception.RestErrorCode;
-//import upgrad.movieapp.api.exception.UnauthorizedException;
 
 /**
  * Provider to decode bearer token.

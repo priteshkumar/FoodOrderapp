@@ -4,6 +4,8 @@ import com.upgrad.FoodOrderingApp.service.dao.CustomerDao;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerAuthEntity;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
 import com.upgrad.FoodOrderingApp.service.exception.AuthenticationFailedException;
+import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
+import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,6 +55,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     CustomerAuthEntity customerAuthEntity = authTokenService.issueToken(customerEntity);
     return customerAuthEntity;
+  }
+
+  @Override
+  public CustomerAuthEntity logout(@NotNull String accessToken)
+      throws AuthorizationFailedException {
+    return authTokenService.invalidateToken(accessToken);
   }
 
 }
