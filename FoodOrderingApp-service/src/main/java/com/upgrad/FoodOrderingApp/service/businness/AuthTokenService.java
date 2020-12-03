@@ -15,6 +15,6 @@ public interface AuthTokenService {
   CustomerAuthEntity invalidateToken(@NotNull String accessToken)
       throws AuthorizationFailedException;
 
-  //CustomerAuthToken validateToken(@NotNull String accessToken);
+  CustomerAuthEntity validateToken(@NotNull String accessToken) throws AuthorizationFailedException;
 
 }

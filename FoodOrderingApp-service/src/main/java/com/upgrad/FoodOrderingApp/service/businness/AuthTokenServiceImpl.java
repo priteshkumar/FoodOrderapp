@@ -8,6 +8,7 @@ import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
 import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
 import java.time.ZonedDateTime;
 import java.util.UUID;
+import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -73,20 +74,25 @@ public class AuthTokenServiceImpl implements AuthTokenService {
     return customerAuthDao.update(customerAuthEntity);
   }
 
-  /*
+
   @Override
   @Transactional(propagation = Propagation.REQUIRED)
-  public UserAuthTokenEntity validateToken(@NotNull String accessToken)
+  public CustomerAuthEntity validateToken(@NotNull String accessToken)
       throws AuthorizationFailedException {
-    final UserAuthTokenEntity userAuthToken = userAuthDao.findToken(accessToken);
-    final UserAuthTokenVerifier tokenVerifier = new UserAuthTokenVerifier(userAuthToken);
-    if (tokenVerifier.isNotFound() || tokenVerifier.hasLoggedOut()) {
-      throw new AuthorizationFailedException(UserErrorCode.USR_005);
+    final CustomerAuthEntity customerAuthEntity = customerAuthDao.findToken(accessToken);
+    final CustomerAuthVerifier tokenVerifier = new CustomerAuthVerifier(customerAuthEntity);
+    if (tokenVerifier.isNotFound()) {
+      throw new AuthorizationFailedException("ATHR-001", "Customer is not Logged in.");
+    }
+    if (tokenVerifier.hasLoggedOut()) {
+      throw new AuthorizationFailedException("ATHR-002",
+          "Customer is logged out. Log in again to access this endpoint.");
     }
     if (tokenVerifier.hasExpired()) {
-      throw new AuthorizationFailedException(UserErrorCode.USR_006);
+      throw new AuthorizationFailedException("ATHR-003",
+          "(Your session is expired. Log in again to access this endpoint.");
     }
-    return userAuthToken;
-  }*/
+    return customerAuthEntity;
+  }
 
 }

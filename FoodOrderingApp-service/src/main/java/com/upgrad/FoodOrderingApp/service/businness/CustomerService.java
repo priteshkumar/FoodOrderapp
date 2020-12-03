@@ -12,6 +12,7 @@ import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
 import com.upgrad.FoodOrderingApp.service.exception.AuthenticationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.SignUpRestrictedException;
+import com.upgrad.FoodOrderingApp.service.exception.UpdateCustomerException;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -23,6 +24,8 @@ public interface CustomerService extends AuthenticationService {
 
   CustomerEntity findCustomerByContactNumber(@NotNull String contactNumber);
 
+  CustomerEntity getCustomer(@NotNull String accessToken) throws AuthorizationFailedException;
+
   CustomerEntity saveCustomer(@NotNull CustomerEntity newUser) throws SignUpRestrictedException;
 
   CustomerAuthEntity authenticate(@NotNull String contactNumber, @NotNull String password)
@@ -30,7 +33,10 @@ public interface CustomerService extends AuthenticationService {
 
   CustomerAuthEntity logout(@NotNull String accessToken) throws AuthorizationFailedException;
 
-  void updateCustomer(@NotNull String userUuid, @NotNull CustomerEntity updatedUser);
+  CustomerEntity updateCustomer(@NotNull CustomerEntity updatedUser);
+
+  CustomerEntity updateCustomerPassword(@NotNull String oldPassword, @NotNull String newPassword,
+      @NotNull CustomerEntity customerEntity) throws UpdateCustomerException;
 
   //void changeUserStatus(@NotNull String userUuid, @NotNull UserStatus newUserStatus) throws
   // ApplicationException;
