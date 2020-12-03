@@ -5,6 +5,7 @@ import com.upgrad.FoodOrderingApp.api.model.SignupCustomerResponse;
 import com.upgrad.FoodOrderingApp.api.model.UpdateCustomerRequest;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
 import com.upgrad.FoodOrderingApp.service.exception.SignUpRestrictedException;
+import com.upgrad.FoodOrderingApp.service.exception.UpdateCustomerException;
 import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
 
@@ -32,8 +33,12 @@ public final class CustomerTransformer {
     return CustomerEntity;
   }
 
-  public static CustomerEntity toEntity(UpdateCustomerRequest customerRequest) {
+  public static CustomerEntity toEntity(UpdateCustomerRequest customerRequest)
+      throws UpdateCustomerException {
     CustomerEntity CustomerEntity = new CustomerEntity();
+    if(StringUtils.isEmpty(customerRequest.getFirstName())){
+      throw new UpdateCustomerException("UCR-002","First name field should not be empty");
+    }
     CustomerEntity.setFirstName(customerRequest.getFirstName());
     CustomerEntity.setLastName(customerRequest.getLastName());
     return CustomerEntity;

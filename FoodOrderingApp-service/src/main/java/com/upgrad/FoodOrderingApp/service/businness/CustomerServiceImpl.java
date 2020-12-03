@@ -6,7 +6,9 @@ import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
 import com.upgrad.FoodOrderingApp.service.exception.AuthenticationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.SignUpRestrictedException;
+import com.upgrad.FoodOrderingApp.service.exception.UpdateCustomerException;
 import java.util.regex.Pattern;
+import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,9 @@ public class CustomerServiceImpl implements CustomerService {
 
   @Autowired
   private AuthenticationService authenticationService;
+
+  @Autowired
+  private AuthTokenService authTokenService;
 
   @Autowired
   private CustomerDao customerDao;
@@ -48,6 +53,13 @@ public class CustomerServiceImpl implements CustomerService {
   }
 
   @Override
+  public CustomerEntity getCustomer(@NotNull String accessToken)
+      throws AuthorizationFailedException {
+    CustomerAuthEntity customerAuthEntity = authTokenService.validateToken(accessToken);
+    return customerAuthEntity.getCustomer();
+  }
+
+  @Override
   @Transactional(propagation = Propagation.REQUIRED)
   public CustomerEntity saveCustomer(final CustomerEntity newCustomer)
       throws SignUpRestrictedException {
@@ -67,7 +79,7 @@ public class CustomerServiceImpl implements CustomerService {
     if (!verifyContactNumber(newCustomer)) {
       throw new SignUpRestrictedException("SGR-003", "Invalid contact number!");
     }
-    if (!verifyPasswordStrength(newCustomer)) {
+    if (!verifyPasswordStrength(newCustomer.getPassword())) {
       throw new SignUpRestrictedException("SGR-004", "Weak password!");
     }
     encryptPassword(newCustomer);
@@ -85,37 +97,25 @@ public class CustomerServiceImpl implements CustomerService {
       throws AuthorizationFailedException {
     return authenticationService.logout(accessToken);
   }
+
   @Override
   @Transactional(propagation = Propagation.REQUIRED)
-  public void updateCustomer(final String userUuid, final CustomerEntity updatedUser) {
+  public CustomerEntity updateCustomer(final CustomerEntity updatedCustomer) {
+    return customerDao.updateCustomer(updatedCustomer);
+  }
 
-    final CustomerEntity existingUser = customerDao.findByUUID(userUuid);
-    if (existingUser == null) {
-      //throw new EntityNotFoundException(UserErrorCode.USR_001, userUuid);
+  @Override
+  public CustomerEntity updateCustomerPassword(@NotNull String oldPassword,
+      @NotNull String newPassword, @NotNull CustomerEntity customerEntity)
+      throws UpdateCustomerException {
+    if(!verifyPasswordStrength(newPassword)){
+      throw new UpdateCustomerException("UCR-001","Weak password!");
     }
-
-    /*if (UserStatus.DELETED == UserStatus.valueOf(existingUser.getStatus())) {
-      throw new ApplicationException(UserErrorCode.USR_012, userUuid);
-    }*/
-
-    /*if (!existingUser.getEmail().equalsIgnoreCase(updatedUser.getEmail())
-        && customerDao.findByEmail(updatedUser.getEmail()) != null) {
-      //throw new ApplicationException(UserErrorCode.USR_009, updatedUser.getEmail());
-    }*/
-
-    if (StringUtils.isNotEmpty(updatedUser.getFirstName())) {
-      existingUser.setFirstName(updatedUser.getFirstName());
+    if(!customerEntity.getPassword().equals(oldPassword)){
+      throw new UpdateCustomerException("UCR-004","Incorrect old password!");
     }
-    if (StringUtils.isNotEmpty(updatedUser.getLastName())) {
-      existingUser.setLastName(updatedUser.getLastName());
-    }
-    if (StringUtils.isNotEmpty(updatedUser.getEmail())) {
-      existingUser.setEmail(updatedUser.getEmail());
-    }
-    if (StringUtils.isNotEmpty(updatedUser.getContact_number())) {
-      existingUser.setContact_number(updatedUser.getContact_number());
-    }
-    //customerDao.update(existingUser);
+    customerEntity.setPassword(newPassword);
+    return customerDao.updateCustomer(customerEntity);
   }
 
   /*
@@ -199,8 +199,7 @@ public class CustomerServiceImpl implements CustomerService {
   it doesn’t have at least eight characters and does not contain at least one digit,
   one uppercase letter, and one of the following characters [#@$%&*!^]
    */
-  private boolean verifyPasswordStrength(final CustomerEntity newCustomer) {
-    String password = newCustomer.getPassword();
+  private boolean verifyPasswordStrength(String password) {
     password = password.trim();
     String letterPattern = ".*[A-Z]+.*";
     String digitPattern = ".*[0-9]+.*";

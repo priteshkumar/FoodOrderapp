@@ -50,22 +50,8 @@ public class CustomerDao {
       return null;
     }
   }
-  /*
-  public UserAuthEntity createUserAuth(UserAuthEntity userAuthEntity) {
-    entityManager.persist(userAuthEntity);
-    return userAuthEntity;
-  }
 
-  public UserAuthEntity getUserAuth(String accessToken) {
-    try {
-      return entityManager.createNamedQuery("userAuthTokenByAccessToken", UserAuthEntity.class)
-          .setParameter("accessToken", accessToken).getSingleResult();
-    } catch (NoResultException e) {
-      return null;
-    }
+  public CustomerEntity updateCustomer(CustomerEntity customerEntity) {
+    return entityManager.merge(customerEntity);
   }
-
-  public void updateUserAuth(UserAuthEntity userAuthEntity) {
-    entityManager.merge(userAuthEntity);
-  }*/
 }
