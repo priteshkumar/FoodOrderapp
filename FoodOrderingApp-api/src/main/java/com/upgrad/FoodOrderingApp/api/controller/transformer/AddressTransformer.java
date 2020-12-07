@@ -11,7 +11,7 @@ public final class AddressTransformer {
   public static AddressEntity toEntity(SaveAddressRequest saveAddressRequest) {
     AddressEntity addressEntity = new AddressEntity();
     if (!StringUtils.isEmpty(saveAddressRequest.getFlatBuildingName())) {
-      addressEntity.setFlat_buil_number(saveAddressRequest.getFlatBuildingName());
+      addressEntity.setFlatBuilNo(saveAddressRequest.getFlatBuildingName());
     }
     if (!StringUtils.isEmpty(saveAddressRequest.getCity())) {
       addressEntity.setCity(saveAddressRequest.getCity());

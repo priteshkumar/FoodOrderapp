@@ -47,6 +47,14 @@ public class StateEntity implements Entity, Identifier<Integer>, UniversalUnique
   @Size(max = 30)
   private String state_name;
 
+  public StateEntity() {
+  }
+
+  public StateEntity(String stateUuid, String state) {
+    this.uuid = stateUuid;
+    this.state_name = state;
+  }
+
   public String getState_name() {
     return state_name;
   }

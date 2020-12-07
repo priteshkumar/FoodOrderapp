@@ -5,6 +5,7 @@ import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
 import com.upgrad.FoodOrderingApp.service.entity.StateEntity;
 import com.upgrad.FoodOrderingApp.service.exception.AddressNotFoundException;
 import com.upgrad.FoodOrderingApp.service.exception.SaveAddressException;
+import java.util.List;
 import javax.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
 
@@ -18,4 +19,6 @@ public interface AddressService {
   AddressEntity saveAddress(@NotNull AddressEntity addressEntity,
       @NotNull CustomerEntity customerEntity)
       throws SaveAddressException;
+
+  List<AddressEntity> getAllAddress(@NotNull CustomerEntity customerEntity);
 }
