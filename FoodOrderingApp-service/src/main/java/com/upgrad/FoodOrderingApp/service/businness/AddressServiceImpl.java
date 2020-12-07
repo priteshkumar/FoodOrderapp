@@ -8,7 +8,11 @@ import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
 import com.upgrad.FoodOrderingApp.service.entity.StateEntity;
 import com.upgrad.FoodOrderingApp.service.exception.AddressNotFoundException;
 import com.upgrad.FoodOrderingApp.service.exception.SaveAddressException;
+import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,16 +49,28 @@ public class AddressServiceImpl implements AddressService {
       throw new SaveAddressException("SAR-002", "Invalid pincode");
     }
     CustomerAddressEntity customerAddressEntity = new CustomerAddressEntity();
-    customerAddressEntity.setCustomerEntity(customerEntity);
-    customerAddressEntity.setAddressEntity(addressEntity);
+    customerAddressEntity.setCustomer(customerEntity);
+    customerAddressEntity.setAddress(addressEntity);
     AddressEntity createdAddress = addressDao.saveAddress(addressEntity);
     customerAddressDao.create(customerAddressEntity);
     return createdAddress;
   }
 
+  @Override
+  public List<AddressEntity> getAllAddress(@NotNull CustomerEntity customerEntity) {
+    List<CustomerAddressEntity> customerAddressEntities =
+        customerAddressDao.getAllCustomerAddress(customerEntity.getId());
+    List<AddressEntity> addressEntities = Optional.ofNullable(customerAddressEntities)
+        .map(List::stream).orElseGet(Stream::empty)
+        .map(CustomerAddressEntity::getAddress)
+        .collect(Collectors.toList());
+    return addressEntities;
+  }
+
+
   private boolean verifyAddressFields(AddressEntity addressEntity) {
     if (StringUtils.isEmpty(addressEntity.getCity()) || StringUtils
-        .isEmpty(addressEntity.getFlat_buil_number()) || StringUtils
+        .isEmpty(addressEntity.getFlatBuilNo()) || StringUtils
         .isEmpty(addressEntity.getLocality()) || org.springframework.util.StringUtils
         .isEmpty(addressEntity.getPincode())) {
       return false;

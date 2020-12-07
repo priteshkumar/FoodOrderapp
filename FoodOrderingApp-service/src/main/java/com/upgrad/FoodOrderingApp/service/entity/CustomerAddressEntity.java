@@ -8,6 +8,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -16,6 +18,13 @@ import org.hibernate.annotations.OnDeleteAction;
 
 @javax.persistence.Entity
 @Table(name = "customer_address", schema = "public")
+@NamedQueries(
+    {
+        @NamedQuery(name = "allAddressByCustomer", query =
+            "select a from CustomerAddressEntity a where a.customer.id "
+                + "= :customer_id")
+    }
+)
 public class CustomerAddressEntity implements Entity, Identifier<Integer>{
 
   @Id
@@ -26,27 +35,27 @@ public class CustomerAddressEntity implements Entity, Identifier<Integer>{
   @ManyToOne
   @JoinColumn(name = "customer_id")
   @OnDelete(action = OnDeleteAction.CASCADE)
-  private CustomerEntity customerEntity;
+  private CustomerEntity customer;
 
   @ManyToOne
   @JoinColumn(name = "address_id")
   @OnDelete(action = OnDeleteAction.CASCADE)
-  private AddressEntity addressEntity;
+  private AddressEntity address;
 
-  public CustomerEntity getCustomerEntity() {
-    return customerEntity;
+  public CustomerEntity getCustomer() {
+    return customer;
   }
 
-  public void setCustomerEntity(CustomerEntity customerEntity) {
-    this.customerEntity = customerEntity;
+  public void setCustomer(CustomerEntity customer) {
+    this.customer = customer;
   }
 
-  public AddressEntity getAddressEntity() {
-    return addressEntity;
+  public AddressEntity getAddress() {
+    return address;
   }
 
-  public void setAddressEntity(AddressEntity addressEntity) {
-    this.addressEntity = addressEntity;
+  public void setAddress(AddressEntity address) {
+    this.address = address;
   }
 
   @Override

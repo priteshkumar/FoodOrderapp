@@ -43,7 +43,7 @@ public class AddressEntity implements Entity, Identifier<Integer>,
 
   @Column(name = "flat_buil_number")
   @Size(max = 255)
-  private String flat_buil_number;
+  private String flatBuilNo;
 
   @Column(name = "locality")
   @Size(max = 255)
@@ -60,18 +60,19 @@ public class AddressEntity implements Entity, Identifier<Integer>,
   @Column(name = "active")
   private int active;
 
+  public String getFlatBuilNo() {
+    return flatBuilNo;
+  }
+
+  public void setFlatBuilNo(String flatBuilNo) {
+    this.flatBuilNo = flatBuilNo;
+  }
+
   @ManyToOne
   @JoinColumn(name = "state_id")
   @OnDelete(action = OnDeleteAction.CASCADE)
   private StateEntity state;
-
-  public String getFlat_buil_number() {
-    return flat_buil_number;
-  }
-
-  public void setFlat_buil_number(String flat_buil_number) {
-    this.flat_buil_number = flat_buil_number;
-  }
+  //setFlatBuilNo
 
   public String getLocality() {
     return locality;
