@@ -1,7 +1,10 @@
 package com.upgrad.FoodOrderingApp.service.businness;
 
 import com.upgrad.FoodOrderingApp.service.dao.AddressDao;
+import com.upgrad.FoodOrderingApp.service.dao.CustomerAddressDao;
 import com.upgrad.FoodOrderingApp.service.entity.AddressEntity;
+import com.upgrad.FoodOrderingApp.service.entity.CustomerAddressEntity;
+import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
 import com.upgrad.FoodOrderingApp.service.entity.StateEntity;
 import com.upgrad.FoodOrderingApp.service.exception.AddressNotFoundException;
 import com.upgrad.FoodOrderingApp.service.exception.SaveAddressException;
@@ -19,6 +22,9 @@ public class AddressServiceImpl implements AddressService {
   @Autowired
   private AddressDao addressDao;
 
+  @Autowired
+  private CustomerAddressDao customerAddressDao;
+
   @Override
   public StateEntity getStateByUUID(@NotNull String uuid) throws AddressNotFoundException {
     StateEntity stateEntity = addressDao.getStateByUUID(uuid);
@@ -31,15 +37,19 @@ public class AddressServiceImpl implements AddressService {
   @Override
   @Transactional(propagation = Propagation.REQUIRED)
   public AddressEntity saveAddress(@NotNull AddressEntity addressEntity,
-      @NotNull StateEntity stateEntity) throws SaveAddressException {
-    if(!verifyAddressFields(addressEntity)){
-     throw new SaveAddressException("SAR-001","No field can be empty");
+      @NotNull CustomerEntity customerEntity) throws SaveAddressException {
+    if (!verifyAddressFields(addressEntity)) {
+      throw new SaveAddressException("SAR-001", "No field can be empty");
     }
-    if(!verifyPinCode(addressEntity.getPincode())){
-      throw new SaveAddressException("SAR-002","Invalid pincode");
+    if (!verifyPinCode(addressEntity.getPincode())) {
+      throw new SaveAddressException("SAR-002", "Invalid pincode");
     }
-    addressEntity.setState(stateEntity);
-    return addressDao.saveAddress(addressEntity);
+    CustomerAddressEntity customerAddressEntity = new CustomerAddressEntity();
+    customerAddressEntity.setCustomerEntity(customerEntity);
+    customerAddressEntity.setAddressEntity(addressEntity);
+    AddressEntity createdAddress = addressDao.saveAddress(addressEntity);
+    customerAddressDao.create(customerAddressEntity);
+    return createdAddress;
   }
 
   private boolean verifyAddressFields(AddressEntity addressEntity) {
@@ -52,7 +62,7 @@ public class AddressServiceImpl implements AddressService {
     return true;
   }
 
-  private boolean verifyPinCode(String pinCode){
+  private boolean verifyPinCode(String pinCode) {
     String pincodePattern = "^[0-9]{6}$";
     if (Pattern.matches(pincodePattern, pinCode)) {
       return true;

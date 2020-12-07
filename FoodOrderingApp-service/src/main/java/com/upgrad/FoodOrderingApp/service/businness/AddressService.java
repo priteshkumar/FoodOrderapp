@@ -1,6 +1,7 @@
 package com.upgrad.FoodOrderingApp.service.businness;
 
 import com.upgrad.FoodOrderingApp.service.entity.AddressEntity;
+import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
 import com.upgrad.FoodOrderingApp.service.entity.StateEntity;
 import com.upgrad.FoodOrderingApp.service.exception.AddressNotFoundException;
 import com.upgrad.FoodOrderingApp.service.exception.SaveAddressException;
@@ -14,6 +15,7 @@ public interface AddressService {
 
   StateEntity getStateByUUID(@NotNull String uuid) throws AddressNotFoundException;
 
-  AddressEntity saveAddress(@NotNull AddressEntity addressEntity, @NotNull StateEntity stateEntity)
+  AddressEntity saveAddress(@NotNull AddressEntity addressEntity,
+      @NotNull CustomerEntity customerEntity)
       throws SaveAddressException;
 }

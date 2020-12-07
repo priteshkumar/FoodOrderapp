@@ -46,7 +46,8 @@ public class AddressController {
     final StateEntity stateEntity =
         addressService.getStateByUUID(saveAddressRequest.getStateUuid());
     final AddressEntity newAddress = toEntity(saveAddressRequest);
-    final AddressEntity savedAddress = addressService.saveAddress(newAddress, stateEntity);
+    newAddress.setState(stateEntity);
+    final AddressEntity savedAddress = addressService.saveAddress(newAddress, customerEntity);
     return ResponseBuilder.created().payload(toSaveAddressResponse(savedAddress)).build();
   }
 }
