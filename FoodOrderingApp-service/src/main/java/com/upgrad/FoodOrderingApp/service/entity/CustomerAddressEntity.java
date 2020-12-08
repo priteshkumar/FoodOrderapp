@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -22,10 +23,13 @@ import org.hibernate.annotations.OnDeleteAction;
     {
         @NamedQuery(name = "allAddressByCustomer", query =
             "select a from CustomerAddressEntity a where a.customer.id "
-                + "= :customer_id")
+                + "= :customer_id"),
+        @NamedQuery(name = "byAddressAndCustomer", query =
+            "select a from CustomerAddressEntity a where a.customer.id "
+                + "= :customer_id and a.address.id = :address_id")
     }
 )
-public class CustomerAddressEntity implements Entity, Identifier<Integer>{
+public class CustomerAddressEntity implements Entity, Identifier<Integer> {
 
   @Id
   @Column(name = "id")
@@ -37,7 +41,7 @@ public class CustomerAddressEntity implements Entity, Identifier<Integer>{
   @OnDelete(action = OnDeleteAction.CASCADE)
   private CustomerEntity customer;
 
-  @ManyToOne
+  @OneToOne
   @JoinColumn(name = "address_id")
   @OnDelete(action = OnDeleteAction.CASCADE)
   private AddressEntity address;

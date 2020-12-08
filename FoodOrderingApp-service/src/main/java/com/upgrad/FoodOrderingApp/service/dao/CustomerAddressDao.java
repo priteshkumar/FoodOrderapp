@@ -9,4 +9,7 @@ public interface CustomerAddressDao extends BaseDao<CustomerAddressEntity> {
   public CustomerAddressEntity create(CustomerAddressEntity customerAddressEntity);
 
   public List<CustomerAddressEntity> getAllCustomerAddress(@NotNull Integer customerId);
+
+  public CustomerAddressEntity findByAddressAndCustomer(final Integer addressId,
+      final Integer customerId);
 }
