@@ -1,11 +1,13 @@
 package com.upgrad.FoodOrderingApp.service.dao;
 
 import static com.upgrad.FoodOrderingApp.service.entity.CustomerAuthEntity.BY_ACCESS_TOKEN;
+import static com.upgrad.FoodOrderingApp.service.entity.StateEntity.BY_ALL_STATES;
 import static com.upgrad.FoodOrderingApp.service.entity.StateEntity.BY_STATE_UUID;
 
 import com.upgrad.FoodOrderingApp.service.entity.AddressEntity;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerAuthEntity;
 import com.upgrad.FoodOrderingApp.service.entity.StateEntity;
+import java.util.List;
 import javax.persistence.NoResultException;
 import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,11 @@ public class AddressDaoImpl extends BaseDaoImpl<AddressEntity> implements Addres
     } catch (NoResultException nre) {
       return null;
     }
+  }
+
+  @Override
+  public List<StateEntity> getAllStates() {
+    return entityManager.createNamedQuery(BY_ALL_STATES, StateEntity.class).getResultList();
   }
 
   @Override

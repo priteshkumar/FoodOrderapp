@@ -26,5 +26,7 @@ public interface AddressService {
 
   List<AddressEntity> getAllAddress(@NotNull CustomerEntity customerEntity);
 
+  List<StateEntity> getAllStates();
+
   AddressEntity deleteAddress(@NotNull AddressEntity addressEntity);
 }

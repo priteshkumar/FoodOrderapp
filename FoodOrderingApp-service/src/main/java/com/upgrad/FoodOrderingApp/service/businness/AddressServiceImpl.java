@@ -93,6 +93,11 @@ public class AddressServiceImpl implements AddressService {
   }
 
   @Override
+  public List<StateEntity> getAllStates() {
+    return addressDao.getAllStates();
+  }
+
+  @Override
   @Transactional(propagation = Propagation.REQUIRED)
   public AddressEntity deleteAddress(@NotNull AddressEntity addressEntity) {
     return addressDao.delete(addressEntity);
