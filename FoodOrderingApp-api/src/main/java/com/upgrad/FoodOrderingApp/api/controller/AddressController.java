@@ -15,6 +15,8 @@ import com.upgrad.FoodOrderingApp.api.model.AddressListState;
 import com.upgrad.FoodOrderingApp.api.model.DeleteAddressResponse;
 import com.upgrad.FoodOrderingApp.api.model.SaveAddressRequest;
 import com.upgrad.FoodOrderingApp.api.model.SaveAddressResponse;
+import com.upgrad.FoodOrderingApp.api.model.StatesList;
+import com.upgrad.FoodOrderingApp.api.model.StatesListResponse;
 import com.upgrad.FoodOrderingApp.service.businness.AddressService;
 import com.upgrad.FoodOrderingApp.service.businness.CustomerService;
 import com.upgrad.FoodOrderingApp.service.entity.AddressEntity;
@@ -23,6 +25,7 @@ import com.upgrad.FoodOrderingApp.service.entity.StateEntity;
 import com.upgrad.FoodOrderingApp.service.exception.AddressNotFoundException;
 import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.SaveAddressException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -92,6 +95,13 @@ public class AddressController {
     return ResponseBuilder.ok().payload(toDeleteAddressResponse(deletedAddressEntity)).build();
   }
 
+  @RequestMapping(method = GET, path = "/states",
+      produces = APPLICATION_JSON_UTF8_VALUE)
+  public ResponseEntity<StatesListResponse> getAll() {
+    List<StateEntity> stateEntities = addressService.getAllStates();
+    return ResponseBuilder.ok().payload(toStateListResponse(stateEntities)).build();
+  }
+
   private AddressListResponse toAddressListResponse(List<AddressEntity> addressEntities) {
     AddressListResponse addressListResponse = new AddressListResponse();
 
@@ -117,5 +127,18 @@ public class AddressController {
         new DeleteAddressResponse().id(UUID.fromString(addressEntity.getUuid()))
             .status("ADDRESS DELETED SUCCESSFULLY");
     return deleteAddressResponse;
+  }
+
+  private StatesListResponse toStateListResponse(List<StateEntity> stateEntities) {
+    StatesListResponse statesListResponse = new StatesListResponse();
+    List<StatesList> stateLists =
+        Optional.ofNullable(stateEntities).map(List::stream).orElseGet(Stream::empty)
+            .map(stateEntity -> {
+              StatesList statesList =
+                  new StatesList().id(UUID.fromString(stateEntity.getUuid()))
+                      .stateName(stateEntity.getState_name());
+              return statesList;
+            }).collect(Collectors.toList());
+    return statesListResponse.states(stateLists);
   }
 }

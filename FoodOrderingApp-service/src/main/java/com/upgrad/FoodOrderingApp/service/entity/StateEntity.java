@@ -6,6 +6,7 @@ uuid VARCHAR(200) UNIQUE NOT NULL,
 state_name VARCHAR(30),PRIMARY KEY (id));
  */
 
+import static com.upgrad.FoodOrderingApp.service.entity.StateEntity.BY_ALL_STATES;
 import static com.upgrad.FoodOrderingApp.service.entity.StateEntity.BY_STATE_UUID;
 
 import com.upgrad.FoodOrderingApp.service.entity.ext.EntityEqualsBuilder;
@@ -24,7 +25,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 @NamedQueries({
     @NamedQuery(name = BY_STATE_UUID, //
-        query = "SELECT st FROM StateEntity st WHERE st.uuid = :uuid")
+        query = "SELECT st FROM StateEntity st WHERE st.uuid = :uuid"),
+    @NamedQuery(name = BY_ALL_STATES, //
+        query = "SELECT st FROM StateEntity st")
 })
 
 @javax.persistence.Entity
@@ -32,6 +35,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class StateEntity implements Entity, Identifier<Integer>, UniversalUniqueIdentifier<String> {
 
   public static final String BY_STATE_UUID = "StateEntity.byUUID";
+  public static final String BY_ALL_STATES = "StateEntity.byAllStates";
 
   @Id
   @Column(name = "id")
