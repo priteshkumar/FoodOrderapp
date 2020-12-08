@@ -7,7 +7,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
-
 /**
  * Generic DAO abstraction for all DAOs to inherit common functionality.
  */
@@ -44,6 +43,12 @@ public class BaseDaoImpl<E extends Entity> implements BaseDao<E> {
     } catch (NoResultException exc) {
       return null;
     }
+  }
+
+  @Override
+  public E delete(E e) {
+    entityManager.remove(e);
+    return e;
   }
 
   protected int getOffset(final int page, final int limit) {

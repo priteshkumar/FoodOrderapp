@@ -3,6 +3,7 @@ package com.upgrad.FoodOrderingApp.api.controller;
 import static com.upgrad.FoodOrderingApp.api.controller.transformer.AddressTransformer.toEntity;
 import static com.upgrad.FoodOrderingApp.api.controller.transformer.AddressTransformer.toSaveAddressResponse;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -11,6 +12,7 @@ import com.upgrad.FoodOrderingApp.api.controller.provider.BearerAuthDecoder;
 import com.upgrad.FoodOrderingApp.api.model.AddressList;
 import com.upgrad.FoodOrderingApp.api.model.AddressListResponse;
 import com.upgrad.FoodOrderingApp.api.model.AddressListState;
+import com.upgrad.FoodOrderingApp.api.model.DeleteAddressResponse;
 import com.upgrad.FoodOrderingApp.api.model.SaveAddressRequest;
 import com.upgrad.FoodOrderingApp.api.model.SaveAddressResponse;
 import com.upgrad.FoodOrderingApp.service.businness.AddressService;
@@ -28,6 +30,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -73,6 +76,22 @@ public class AddressController {
     return ResponseBuilder.ok().payload(toAddressListResponse(addressEntityList)).build();
   }
 
+  @RequestMapping(method = DELETE, path = "/address/{address_id}",
+      produces = APPLICATION_JSON_UTF8_VALUE)
+  public ResponseEntity<DeleteAddressResponse> deleteAddress(
+      @RequestHeader final String authorization,
+      @PathVariable("address_id") final String address_id)
+      throws AuthorizationFailedException, AddressNotFoundException {
+
+    BearerAuthDecoder bearerAuthDecoder = new BearerAuthDecoder(authorization);
+    final CustomerEntity customerEntity = customerService
+        .getCustomer(bearerAuthDecoder.getAccessToken());
+
+    final AddressEntity addressEntity = addressService.getAddressByUUID(address_id, customerEntity);
+    AddressEntity deletedAddressEntity = addressService.deleteAddress(addressEntity);
+    return ResponseBuilder.ok().payload(toDeleteAddressResponse(deletedAddressEntity)).build();
+  }
+
   private AddressListResponse toAddressListResponse(List<AddressEntity> addressEntities) {
     AddressListResponse addressListResponse = new AddressListResponse();
 
@@ -91,5 +110,12 @@ public class AddressController {
             }).collect(Collectors.toList());
     addressListResponse = addressListResponse.addresses(addressLists);
     return addressListResponse;
+  }
+
+  private DeleteAddressResponse toDeleteAddressResponse(AddressEntity addressEntity) {
+    DeleteAddressResponse deleteAddressResponse =
+        new DeleteAddressResponse().id(UUID.fromString(addressEntity.getUuid()))
+            .status("ADDRESS DELETED SUCCESSFULLY");
+    return deleteAddressResponse;
   }
 }

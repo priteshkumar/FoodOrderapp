@@ -7,13 +7,16 @@ import com.upgrad.FoodOrderingApp.service.entity.CustomerAddressEntity;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
 import com.upgrad.FoodOrderingApp.service.entity.StateEntity;
 import com.upgrad.FoodOrderingApp.service.exception.AddressNotFoundException;
+import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.SaveAddressException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.validation.constraints.NotNull;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,6 +39,28 @@ public class AddressServiceImpl implements AddressService {
       throw new AddressNotFoundException("ANF-002", "No state by this state id");
     }
     return stateEntity;
+  }
+
+  @Override
+  public AddressEntity getAddressByUUID(final String uuid,
+      @NotNull CustomerEntity customerEntity)
+      throws AddressNotFoundException, AuthorizationFailedException {
+
+    if (StringUtils.isEmpty(uuid) == true) {
+      throw new AddressNotFoundException("ANF-005", "Address id can not be empty");
+    }
+
+    AddressEntity addressEntity = addressDao.findByUUID(uuid);
+    if (Objects.equals(addressEntity, null) == true) {
+      throw new AddressNotFoundException("ANF-003", "No address by this id");
+    }
+    CustomerAddressEntity customerAddressEntity =
+        customerAddressDao.findByAddressAndCustomer(addressEntity.getId(), customerEntity.getId());
+    if (Objects.equals(customerAddressEntity, null) == true) {
+      throw new AuthorizationFailedException("ATHR-004",
+          "You are not authorized to view/update/delete any one else's address");
+    }
+    return addressEntity;
   }
 
   @Override
@@ -65,6 +90,12 @@ public class AddressServiceImpl implements AddressService {
         .map(CustomerAddressEntity::getAddress)
         .collect(Collectors.toList());
     return addressEntities;
+  }
+
+  @Override
+  @Transactional(propagation = Propagation.REQUIRED)
+  public AddressEntity deleteAddress(@NotNull AddressEntity addressEntity) {
+    return addressDao.delete(addressEntity);
   }
 
 

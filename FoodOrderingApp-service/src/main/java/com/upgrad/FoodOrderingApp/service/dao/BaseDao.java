@@ -13,4 +13,5 @@ public interface BaseDao<E> {
 
   E findByUUID(final Object uuid);
 
+  E delete(E e);
 }
