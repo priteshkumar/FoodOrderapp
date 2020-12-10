@@ -14,6 +14,7 @@ import com.upgrad.FoodOrderingApp.service.businness.RestaurantService;
 import com.upgrad.FoodOrderingApp.service.entity.CategoryEntity;
 import com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity;
 import com.upgrad.FoodOrderingApp.service.entity.StateEntity;
+import com.upgrad.FoodOrderingApp.service.exception.RestaurantNotFoundException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,6 +41,23 @@ public class RestaurantController {
   public ResponseEntity<RestaurantListResponse> getAll() {
 
     List<RestaurantEntity> restaurants = restaurantService.restaurantsByRating();
+    final List<RestaurantList> restaurantLists = prepareRestaurantList(restaurants);
+    return ResponseBuilder.ok().payload(new RestaurantListResponse().restaurants(restaurantLists))
+        .build();
+  }
+
+  @RequestMapping(method = GET, path = "/restaurant/name/{restaurantName}",
+      produces = APPLICATION_JSON_UTF8_VALUE)
+  public ResponseEntity<RestaurantListResponse> getRestaurantsByName(
+      @PathVariable(value = "restaurantName",required = false) final String restaurantName)
+      throws RestaurantNotFoundException {
+    final List<RestaurantEntity> restaurants = restaurantService.restaurantsByName(restaurantName);
+    final List<RestaurantList> restaurantLists = prepareRestaurantList(restaurants);
+    return ResponseBuilder.ok().payload(new RestaurantListResponse().restaurants(restaurantLists))
+        .build();
+  }
+
+  private List<RestaurantList> prepareRestaurantList(List<RestaurantEntity> restaurants) {
     List<RestaurantList> restaurantLists =
         Optional.ofNullable(restaurants).map(List::stream).orElseGet(Stream::empty)
             .map(restaurantEntity -> {
@@ -68,16 +87,16 @@ public class RestaurantController {
 
               List<CategoryEntity> categories =
                   categoryService.getCategoriesByRestaurant(restaurantEntity.getUuid());
+
               StringBuilder res = new StringBuilder();
-              categories.forEach(categoryEntity -> {
-                res.append(categoryEntity.getCategoryName() + ", ");
-              });
+              for (int i = 0; i < categories.size() - 1; i++) {
+                res = res.append(categories.get(i).getCategoryName()).append(", ");
+              }
+              res = res.append(categories.get(categories.size() - 1).getCategoryName());
               restaurantList.setCategories(res.toString());
               return restaurantList;
             }).collect(Collectors.toList());
 
-    return ResponseBuilder.ok().payload(new RestaurantListResponse().restaurants(restaurantLists))
-        .build();
+    return restaurantLists;
   }
-
 }
