@@ -10,6 +10,7 @@ state_id INTEGER,
  PRIMARY KEY (id),
  FOREIGN KEY (state_id) REFERENCES STATE(id) ON DELETE CASCADE);
  */
+
 import com.upgrad.FoodOrderingApp.service.entity.ext.EntityEqualsBuilder;
 import com.upgrad.FoodOrderingApp.service.entity.ext.EntityHashCodeBuilder;
 import javax.persistence.Column;
@@ -57,8 +58,26 @@ public class AddressEntity implements Entity, Identifier<Integer>,
   @Size(max = 30)
   private String pincode;
 
-  @Column(name = "active")
+  @Column(name = "active",insertable = false)
   private int active;
+
+  @ManyToOne
+  @JoinColumn(name = "state_id")
+  @OnDelete(action = OnDeleteAction.CASCADE)
+  private StateEntity state;
+
+  public AddressEntity() {
+  }
+
+  public AddressEntity(String addressId, String s, String someLocality, String someCity, String s1,
+      StateEntity stateEntity) {
+    this.uuid = addressId;
+    this.flatBuilNo = s;
+    this.locality = someLocality;
+    this.city = someCity;
+    this.pincode = s1;
+    this.state = stateEntity;
+  }
 
   public String getFlatBuilNo() {
     return flatBuilNo;
@@ -67,11 +86,6 @@ public class AddressEntity implements Entity, Identifier<Integer>,
   public void setFlatBuilNo(String flatBuilNo) {
     this.flatBuilNo = flatBuilNo;
   }
-
-  @ManyToOne
-  @JoinColumn(name = "state_id")
-  @OnDelete(action = OnDeleteAction.CASCADE)
-  private StateEntity state;
   //setFlatBuilNo
 
   public String getLocality() {
