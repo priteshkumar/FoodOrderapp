@@ -172,7 +172,7 @@ public class RestaurantControllerTest {
         .andExpect(jsonPath("code").value("RNF-003"));
     verify(mockRestaurantService, times(1)).restaurantsByName(anyString());
   }
-/*
+
   // ------------------------------------------ GET /restaurant/category/{category_id} ------------------------------------------
 
   //This test case passes when you are able to retrieve restaurant belonging to any particular categories.
@@ -238,7 +238,7 @@ public class RestaurantControllerTest {
         .andExpect(jsonPath("code").value("CNF-002"));
     verify(mockRestaurantService, times(1)).restaurantByCategory("someCategoryId");
   }
-*/
+
   // ------------------------------------------ GET /restaurant ------------------------------------------
 
   //This test case passes when you able to fetch the list of all restaurants.

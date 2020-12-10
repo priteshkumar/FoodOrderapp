@@ -98,6 +98,15 @@ public class RestaurantEntity implements Entity, Identifier<Integer>,
   @JoinColumn(name = "restaurant_id")
   private List<RestaurantCategoryEntity> restaurantCategories = new ArrayList<>();
 
+  public List<RestaurantCategoryEntity> getRestaurantCategories() {
+    return restaurantCategories;
+  }
+
+  public void setRestaurantCategories(
+      List<RestaurantCategoryEntity> restaurantCategories) {
+    this.restaurantCategories = restaurantCategories;
+  }
+
   public String getRestaurantName() {
     return restaurantName;
   }

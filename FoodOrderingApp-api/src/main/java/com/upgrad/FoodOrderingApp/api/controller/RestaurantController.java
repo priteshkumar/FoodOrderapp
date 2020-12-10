@@ -4,6 +4,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 import com.upgrad.FoodOrderingApp.api.controller.ext.ResponseBuilder;
+import com.upgrad.FoodOrderingApp.api.model.RestaurantDetailsResponse;
 import com.upgrad.FoodOrderingApp.api.model.RestaurantDetailsResponseAddress;
 import com.upgrad.FoodOrderingApp.api.model.RestaurantDetailsResponseAddressState;
 import com.upgrad.FoodOrderingApp.api.model.RestaurantList;
@@ -14,6 +15,7 @@ import com.upgrad.FoodOrderingApp.service.businness.RestaurantService;
 import com.upgrad.FoodOrderingApp.service.entity.CategoryEntity;
 import com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity;
 import com.upgrad.FoodOrderingApp.service.entity.StateEntity;
+import com.upgrad.FoodOrderingApp.service.exception.CategoryNotFoundException;
 import com.upgrad.FoodOrderingApp.service.exception.RestaurantNotFoundException;
 import java.math.BigDecimal;
 import java.util.List;
@@ -24,6 +26,7 @@ import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -49,13 +52,36 @@ public class RestaurantController {
   @RequestMapping(method = GET, path = "/restaurant/name/{restaurantName}",
       produces = APPLICATION_JSON_UTF8_VALUE)
   public ResponseEntity<RestaurantListResponse> getRestaurantsByName(
-      @PathVariable(value = "restaurantName",required = false) final String restaurantName)
+      @PathVariable("restaurantName") final String restaurantName)
       throws RestaurantNotFoundException {
     final List<RestaurantEntity> restaurants = restaurantService.restaurantsByName(restaurantName);
     final List<RestaurantList> restaurantLists = prepareRestaurantList(restaurants);
     return ResponseBuilder.ok().payload(new RestaurantListResponse().restaurants(restaurantLists))
         .build();
   }
+
+  @RequestMapping(method = GET, path = "/restaurant/category/{categoryId}",
+      produces = APPLICATION_JSON_UTF8_VALUE)
+  public ResponseEntity<RestaurantListResponse> getRestaurantsByCategory(
+      @PathVariable("categoryId") final String categoryId)
+      throws RestaurantNotFoundException, CategoryNotFoundException {
+
+    final List<RestaurantEntity> restaurants = restaurantService.restaurantByCategory(categoryId);
+    final List<RestaurantList> restaurantLists = prepareRestaurantList(restaurants);
+    return ResponseBuilder.ok().payload(new RestaurantListResponse().restaurants(restaurantLists))
+        .build();
+  }
+
+  /*
+  @RequestMapping(method = GET, path = "/restaurant/{restaurantId}",
+      produces = APPLICATION_JSON_UTF8_VALUE)
+  public ResponseEntity<RestaurantDetailsResponse> getRestaurantById(
+      @RequestHeader("authorization") final String authorization,
+      @PathVariable("restaurantId") final String restaurantId)
+      throws RestaurantNotFoundException {
+
+    return null;
+  }*/
 
   private List<RestaurantList> prepareRestaurantList(List<RestaurantEntity> restaurants) {
     List<RestaurantList> restaurantLists =

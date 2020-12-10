@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface RestaurantDao extends BaseDao<RestaurantEntity> {
 
-  public List<RestaurantEntity> getAllRestaurants(final String searchQuery, final SortBy sortBy);
+  public List<RestaurantEntity> getAllRestaurants(final String searchQuery, final SortBy sortBy,
+      String categoryId);
 }

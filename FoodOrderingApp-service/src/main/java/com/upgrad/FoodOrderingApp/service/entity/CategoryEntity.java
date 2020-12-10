@@ -2,10 +2,14 @@ package com.upgrad.FoodOrderingApp.service.entity;
 
 import com.upgrad.FoodOrderingApp.service.entity.ext.EntityEqualsBuilder;
 import com.upgrad.FoodOrderingApp.service.entity.ext.EntityHashCodeBuilder;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -30,6 +34,19 @@ public class CategoryEntity implements Entity, Identifier<Integer>,
   @Column(name = "category_name")
   @Size(max = 255)
   private String categoryName;
+
+  @OneToMany
+  @JoinColumn(name = "category_id")
+  private List<RestaurantCategoryEntity> restaurantCategoryEntities = new ArrayList<>();
+
+  public List<RestaurantCategoryEntity> getRestaurantCategoryEntities() {
+    return restaurantCategoryEntities;
+  }
+
+  public void setRestaurantCategoryEntities(
+      List<RestaurantCategoryEntity> restaurantCategoryEntities) {
+    this.restaurantCategoryEntities = restaurantCategoryEntities;
+  }
 
   public String getCategoryName() {
     return categoryName;

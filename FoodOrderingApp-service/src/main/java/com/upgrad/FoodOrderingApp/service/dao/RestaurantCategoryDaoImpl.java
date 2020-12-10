@@ -17,7 +17,8 @@ import javax.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class RestaurantCategoryDaoImpl extends BaseDaoImpl<CategoryEntity> implements RestaurantCategoryDao {
+public class RestaurantCategoryDaoImpl extends BaseDaoImpl<CategoryEntity> implements
+    RestaurantCategoryDao {
 
   @Override
   public List<CategoryEntity> getCategoriesByRestaurant(String restaurantUUID) {
@@ -41,4 +42,5 @@ public class RestaurantCategoryDaoImpl extends BaseDaoImpl<CategoryEntity> imple
             .map(RestaurantCategoryEntity::getCategory).collect(Collectors.toList());
     return categoryEntities;
   }
+
 }

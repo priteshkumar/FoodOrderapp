@@ -4,6 +4,7 @@ import com.upgrad.FoodOrderingApp.api.model.ErrorResponse;
 import com.upgrad.FoodOrderingApp.service.exception.AddressNotFoundException;
 import com.upgrad.FoodOrderingApp.service.exception.AuthenticationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
+import com.upgrad.FoodOrderingApp.service.exception.CategoryNotFoundException;
 import com.upgrad.FoodOrderingApp.service.exception.RestaurantNotFoundException;
 import com.upgrad.FoodOrderingApp.service.exception.SaveAddressException;
 import com.upgrad.FoodOrderingApp.service.exception.SignUpRestrictedException;
@@ -88,4 +89,14 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         HttpStatus.NOT_FOUND
     );
   }
+
+  @ExceptionHandler(CategoryNotFoundException.class)
+  public ResponseEntity<ErrorResponse> categoryException(CategoryNotFoundException exe,
+      WebRequest request) {
+    return new ResponseEntity<ErrorResponse>(
+        new ErrorResponse().code(exe.getCode()).message(exe.getErrorMessage()),
+        HttpStatus.NOT_FOUND
+    );
+  }
+
 }
