@@ -49,4 +49,16 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
     return restaurantDao.getAllRestaurants(null, SortBy.RESTAURANT_NAME, categoryId);
   }
+
+  @Override
+  public RestaurantEntity restaurantByUUID(String restaurantId) throws RestaurantNotFoundException {
+    if(StringUtils.isEmpty(restaurantId)){
+      throw new RestaurantNotFoundException("RNF-002", "Restaurant id field should not be empty");
+    }
+    RestaurantEntity restaurantEntity = restaurantDao.findByUUID(restaurantId);
+    if (restaurantEntity == null) {
+      throw new RestaurantNotFoundException("RNF-001", "No restaurant by this id");
+    }
+    return restaurantEntity;
+  }
 }

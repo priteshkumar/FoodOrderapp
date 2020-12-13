@@ -1,13 +1,4 @@
 package com.upgrad.FoodOrderingApp.service.entity;
-/*CREATE TABLE CUSTOMER(id SERIAL,
-    uuid VARCHAR(200) UNIQUE NOT NULL,
-    firstname VARCHAR(30) NOT NULL,
-    lastname VARCHAR(30) ,
-    email VARCHAR(50),
-    contact_number VARCHAR(30) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    salt VARCHAR(255) NOT NULL ,
-     PRIMARY KEY(id));*/
 
 import com.upgrad.FoodOrderingApp.service.entity.ext.EntityEqualsBuilder;
 import com.upgrad.FoodOrderingApp.service.entity.ext.EntityHashCodeBuilder;

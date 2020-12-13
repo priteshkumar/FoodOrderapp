@@ -14,4 +14,7 @@ public interface RestaurantService {
 
   public List<RestaurantEntity> restaurantByCategory(final String categoryId)
       throws CategoryNotFoundException;
+
+  public RestaurantEntity restaurantByUUID(final String restaurantId)
+      throws RestaurantNotFoundException;
 }

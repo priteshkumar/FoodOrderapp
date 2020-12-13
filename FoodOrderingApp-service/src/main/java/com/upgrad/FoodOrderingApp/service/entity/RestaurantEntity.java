@@ -1,20 +1,5 @@
 package com.upgrad.FoodOrderingApp.service.entity;
 
-/*
-DROP TABLE IF EXISTS RESTAURANT CASCADE;
-CREATE TABLE RESTAURANT(id SERIAL,
-uuid VARCHAR(200) UNIQUE NOT NULL,
-restaurant_name VARCHAR(50) NOT NULL,
-photo_url VARCHAR(255),
-customer_rating DECIMAL NOT NULL,
-average_price_for_two INTEGER NOT NULL,
- number_of_customers_rated INTEGER NOT NULL DEFAULT 0,
-  address_id INTEGER NOT NULL ,
-  PRIMARY KEY(id),
-  FOREIGN KEY (address_id) REFERENCES ADDRESS(id) ON DELETE CASCADE);
-
- */
-
 import static com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity.BY_ALL_RESTAURANTS;
 import static com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity.BY_RESTAURANT_UUID;
 import static com.upgrad.FoodOrderingApp.service.entity.StateEntity.BY_ALL_STATES;
@@ -22,6 +7,7 @@ import static com.upgrad.FoodOrderingApp.service.entity.StateEntity.BY_STATE_UUI
 
 import com.upgrad.FoodOrderingApp.service.entity.ext.EntityEqualsBuilder;
 import com.upgrad.FoodOrderingApp.service.entity.ext.EntityHashCodeBuilder;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +38,7 @@ import org.hibernate.annotations.OnDeleteAction;
         query = "SELECT rst FROM RestaurantEntity rst")
 })
 public class RestaurantEntity implements Entity, Identifier<Integer>,
-    UniversalUniqueIdentifier<String> {
+    UniversalUniqueIdentifier<String>, Serializable {
 
   public final static String BY_RESTAURANT_UUID = "RestaurantEntity.byUUID";
   public final static String BY_ALL_RESTAURANTS = "RestaurantEntity.byAllRestaurants";

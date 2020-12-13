@@ -18,9 +18,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 @javax.persistence.Entity
-@Table(name = "category", schema = "public")
-public class CategoryEntity implements Entity, Identifier<Integer>,
-    UniversalUniqueIdentifier<String>, Serializable {
+@Table(name = "item", schema = "public")
+public class ItemEntity implements Entity, Identifier<Integer>, UniversalUniqueIdentifier<String>,
+    Serializable {
 
   @Id
   @Column(name = "id")
@@ -32,17 +32,38 @@ public class CategoryEntity implements Entity, Identifier<Integer>,
   @Size(max = 200)
   private String uuid;
 
-  @Column(name = "category_name")
-  @Size(max = 255)
-  private String categoryName;
-/*
+  @Column(name = "item_name")
+  @NotNull
+  @Size(max = 30)
+  private String itemName;
+
+  @Column(name = "price")
+  @NotNull
+  private Integer price;
+
+  @Column(name = "type")
+  @NotNull
+  @Size(max = 10)
+  private String type;
+
   @OneToMany
-  @JoinColumn(name = "category_id")
-  private List<RestaurantCategoryEntity> restaurantCategoryEntities = new ArrayList<>();
-*/
-  /*@OneToMany
-  @JoinColumn(name = "category_id")
+  @JoinColumn(name = "item_id")
+  private List<RestaurantItemEntity> restaurantItems = new ArrayList<>();
+
+
+  @OneToMany
+  @JoinColumn(name = "item_id")
   private List<CategoryItemEntity> categoryItemEntities = new ArrayList<>();
+
+
+  public List<RestaurantItemEntity> getRestaurantItems() {
+    return restaurantItems;
+  }
+
+  public void setRestaurantItems(
+      List<RestaurantItemEntity> restaurantItems) {
+    this.restaurantItems = restaurantItems;
+  }
 
   public List<CategoryItemEntity> getCategoryItemEntities() {
     return categoryItemEntities;
@@ -51,23 +72,30 @@ public class CategoryEntity implements Entity, Identifier<Integer>,
   public void setCategoryItemEntities(
       List<CategoryItemEntity> categoryItemEntities) {
     this.categoryItemEntities = categoryItemEntities;
-  }*/
-/*
-  public List<RestaurantCategoryEntity> getRestaurantCategoryEntities() {
-    return restaurantCategoryEntities;
   }
 
-  public void setRestaurantCategoryEntities(
-      List<RestaurantCategoryEntity> restaurantCategoryEntities) {
-    this.restaurantCategoryEntities = restaurantCategoryEntities;
-  }
-*/
-  public String getCategoryName() {
-    return categoryName;
+  public String getItemName() {
+    return itemName;
   }
 
-  public void setCategoryName(String categoryName) {
-    this.categoryName = categoryName;
+  public void setItemName(String itemName) {
+    this.itemName = itemName;
+  }
+
+  public Integer getPrice() {
+    return price;
+  }
+
+  public void setPrice(Integer price) {
+    this.price = price;
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
   }
 
   @Override
