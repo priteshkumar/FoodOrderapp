@@ -16,8 +16,8 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 @javax.persistence.Entity
-@Table(name = "restaurant_category", schema = "public")
-public class RestaurantCategoryEntity implements Entity, Identifier<Integer>, Serializable {
+@Table(name = "category_item", schema = "public")
+public class CategoryItemEntity implements Entity, Identifier<Integer>, Serializable {
 
   @Id
   @Column(name = "id")
@@ -25,14 +25,30 @@ public class RestaurantCategoryEntity implements Entity, Identifier<Integer>, Se
   private Integer id;
 
   @ManyToOne
-  @JoinColumn(name = "restaurant_id")
-  @OnDelete(action = OnDeleteAction.CASCADE)
-  private RestaurantEntity restaurant;
-
-  @ManyToOne
   @JoinColumn(name = "category_id")
   @OnDelete(action = OnDeleteAction.CASCADE)
   private CategoryEntity category;
+
+  @ManyToOne
+  @JoinColumn(name = "item_id")
+  @OnDelete(action = OnDeleteAction.CASCADE)
+  private ItemEntity item;
+
+  public CategoryEntity getCategory() {
+    return category;
+  }
+
+  public void setCategory(CategoryEntity category) {
+    this.category = category;
+  }
+
+  public ItemEntity getItem() {
+    return item;
+  }
+
+  public void setItem(ItemEntity item) {
+    this.item = item;
+  }
 
   @Override
   public Integer getId() {
@@ -41,22 +57,6 @@ public class RestaurantCategoryEntity implements Entity, Identifier<Integer>, Se
 
   public void setId(Integer id) {
     this.id = id;
-  }
-
-  public RestaurantEntity getRestaurant() {
-    return restaurant;
-  }
-
-  public void setRestaurant(RestaurantEntity restaurant) {
-    this.restaurant = restaurant;
-  }
-
-  public CategoryEntity getCategory() {
-    return category;
-  }
-
-  public void setCategory(CategoryEntity category) {
-    this.category = category;
   }
 
   @Override

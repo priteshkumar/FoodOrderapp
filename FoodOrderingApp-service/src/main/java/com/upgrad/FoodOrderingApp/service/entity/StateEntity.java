@@ -1,16 +1,10 @@
 package com.upgrad.FoodOrderingApp.service.entity;
-/*
-DROP TABLE IF EXISTS STATE CASCADE;
-CREATE TABLE STATE(id SERIAL,
-uuid VARCHAR(200) UNIQUE NOT NULL,
-state_name VARCHAR(30),PRIMARY KEY (id));
- */
 
 import static com.upgrad.FoodOrderingApp.service.entity.StateEntity.BY_ALL_STATES;
 import static com.upgrad.FoodOrderingApp.service.entity.StateEntity.BY_STATE_UUID;
-
 import com.upgrad.FoodOrderingApp.service.entity.ext.EntityEqualsBuilder;
 import com.upgrad.FoodOrderingApp.service.entity.ext.EntityHashCodeBuilder;
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -32,7 +26,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 @javax.persistence.Entity
 @Table(name = "state", schema = "public")
-public class StateEntity implements Entity, Identifier<Integer>, UniversalUniqueIdentifier<String> {
+public class StateEntity implements Entity, Identifier<Integer>,
+    UniversalUniqueIdentifier<String>, Serializable {
 
   public static final String BY_STATE_UUID = "StateEntity.byUUID";
   public static final String BY_ALL_STATES = "StateEntity.byAllStates";

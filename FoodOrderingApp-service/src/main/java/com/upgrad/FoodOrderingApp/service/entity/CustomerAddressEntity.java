@@ -2,6 +2,7 @@ package com.upgrad.FoodOrderingApp.service.entity;
 
 import com.upgrad.FoodOrderingApp.service.entity.ext.EntityEqualsBuilder;
 import com.upgrad.FoodOrderingApp.service.entity.ext.EntityHashCodeBuilder;
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -29,7 +30,7 @@ import org.hibernate.annotations.OnDeleteAction;
                 + "= :customer_id and a.address.id = :address_id")
     }
 )
-public class CustomerAddressEntity implements Entity, Identifier<Integer> {
+public class CustomerAddressEntity implements Entity, Identifier<Integer>, Serializable {
 
   @Id
   @Column(name = "id")
