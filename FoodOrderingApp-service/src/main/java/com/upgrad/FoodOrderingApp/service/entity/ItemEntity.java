@@ -50,7 +50,6 @@ public class ItemEntity implements Entity, Identifier<Integer>, UniversalUniqueI
   @JoinColumn(name = "item_id")
   private List<RestaurantItemEntity> restaurantItems = new ArrayList<>();
 
-
   @OneToMany
   @JoinColumn(name = "item_id")
   private List<CategoryItemEntity> categoryItemEntities = new ArrayList<>();

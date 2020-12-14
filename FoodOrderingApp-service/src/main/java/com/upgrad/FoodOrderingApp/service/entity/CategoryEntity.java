@@ -5,6 +5,9 @@ import com.upgrad.FoodOrderingApp.service.entity.ext.EntityHashCodeBuilder;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -35,12 +38,8 @@ public class CategoryEntity implements Entity, Identifier<Integer>,
   @Column(name = "category_name")
   @Size(max = 255)
   private String categoryName;
-/*
-  @OneToMany
-  @JoinColumn(name = "category_id")
-  private List<RestaurantCategoryEntity> restaurantCategoryEntities = new ArrayList<>();
-*/
-  /*@OneToMany
+
+  @OneToMany(cascade = {CascadeType.ALL})
   @JoinColumn(name = "category_id")
   private List<CategoryItemEntity> categoryItemEntities = new ArrayList<>();
 
@@ -51,17 +50,8 @@ public class CategoryEntity implements Entity, Identifier<Integer>,
   public void setCategoryItemEntities(
       List<CategoryItemEntity> categoryItemEntities) {
     this.categoryItemEntities = categoryItemEntities;
-  }*/
-/*
-  public List<RestaurantCategoryEntity> getRestaurantCategoryEntities() {
-    return restaurantCategoryEntities;
   }
 
-  public void setRestaurantCategoryEntities(
-      List<RestaurantCategoryEntity> restaurantCategoryEntities) {
-    this.restaurantCategoryEntities = restaurantCategoryEntities;
-  }
-*/
   public String getCategoryName() {
     return categoryName;
   }
@@ -86,6 +76,16 @@ public class CategoryEntity implements Entity, Identifier<Integer>,
 
   public void setUuid(String uuid) {
     this.uuid = uuid;
+  }
+
+  public void setItems(List<ItemEntity> items){
+    this.categoryItemEntities.clear();
+    items.forEach(itemEntity -> {
+      CategoryItemEntity categoryItem = new CategoryItemEntity();
+      categoryItem.setCategory(this);
+      categoryItem.setItem(itemEntity);
+      this.categoryItemEntities.add(categoryItem);
+    });
   }
 
   @Override

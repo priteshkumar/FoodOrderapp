@@ -11,6 +11,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -80,7 +81,7 @@ public class RestaurantEntity implements Entity, Identifier<Integer>,
   @OnDelete(action = OnDeleteAction.CASCADE)
   private AddressEntity address;
 
-  @OneToMany
+  @OneToMany(cascade = {CascadeType.ALL})
   @JoinColumn(name = "restaurant_id")
   private List<RestaurantCategoryEntity> restaurantCategories = new ArrayList<>();
 
