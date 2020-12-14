@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -78,7 +79,16 @@ public class CategoryEntity implements Entity, Identifier<Integer>,
     this.uuid = uuid;
   }
 
-  public void setItems(List<ItemEntity> items){
+  public List<ItemEntity> getItems() {
+    List<ItemEntity> items =
+        Optional.ofNullable(this.categoryItemEntities).map(List::stream).orElseGet(Stream::empty)
+            .map(categoryItemEntity -> {
+              return categoryItemEntity.getItem();
+            }).collect(Collectors.toList());
+    return items;
+  }
+
+  public void setItems(List<ItemEntity> items) {
     this.categoryItemEntities.clear();
     items.forEach(itemEntity -> {
       CategoryItemEntity categoryItem = new CategoryItemEntity();
