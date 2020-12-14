@@ -2,8 +2,10 @@ package com.upgrad.FoodOrderingApp.api.controller;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 import com.upgrad.FoodOrderingApp.api.controller.ext.ResponseBuilder;
+import com.upgrad.FoodOrderingApp.api.controller.provider.BearerAuthDecoder;
 import com.upgrad.FoodOrderingApp.api.model.CategoryList;
 import com.upgrad.FoodOrderingApp.api.model.ItemList;
 import com.upgrad.FoodOrderingApp.api.model.ItemList.ItemTypeEnum;
@@ -12,15 +14,19 @@ import com.upgrad.FoodOrderingApp.api.model.RestaurantDetailsResponseAddress;
 import com.upgrad.FoodOrderingApp.api.model.RestaurantDetailsResponseAddressState;
 import com.upgrad.FoodOrderingApp.api.model.RestaurantList;
 import com.upgrad.FoodOrderingApp.api.model.RestaurantListResponse;
+import com.upgrad.FoodOrderingApp.api.model.RestaurantUpdatedResponse;
 import com.upgrad.FoodOrderingApp.service.businness.CategoryService;
 import com.upgrad.FoodOrderingApp.service.businness.CustomerService;
 import com.upgrad.FoodOrderingApp.service.businness.RestaurantItemService;
 import com.upgrad.FoodOrderingApp.service.businness.RestaurantService;
 import com.upgrad.FoodOrderingApp.service.common.ItemType;
 import com.upgrad.FoodOrderingApp.service.entity.CategoryEntity;
+import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
 import com.upgrad.FoodOrderingApp.service.entity.ItemEntity;
 import com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity;
+import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.CategoryNotFoundException;
+import com.upgrad.FoodOrderingApp.service.exception.InvalidRatingException;
 import com.upgrad.FoodOrderingApp.service.exception.RestaurantNotFoundException;
 import java.math.BigDecimal;
 import java.util.List;
@@ -31,7 +37,9 @@ import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -94,6 +102,24 @@ public class RestaurantController {
 
     List<CategoryList> categoryLists = prepareCategoryList(restaurantId, categories);
     return ResponseBuilder.ok().payload(toRestaurantDetailResponse(restaurant, categoryLists))
+        .build();
+  }
+
+  @RequestMapping(method = PUT, path = "/restaurant/{restaurant_id}",
+      produces = APPLICATION_JSON_UTF8_VALUE)
+  public ResponseEntity<RestaurantUpdatedResponse> updateRatingByRestaurantId(
+      @RequestHeader final String authorization,
+      @PathVariable("restaurant_id") final String restaurantId,
+      @RequestParam("customer_rating") final Double customerRating)
+      throws RestaurantNotFoundException, AuthorizationFailedException, InvalidRatingException {
+
+    BearerAuthDecoder bearerAuthDecoder = new BearerAuthDecoder(authorization);
+    CustomerEntity customerEntity = customerService.getCustomer(bearerAuthDecoder.getAccessToken());
+
+    RestaurantEntity restaurant = restaurantService.restaurantByUUID(restaurantId);
+    RestaurantEntity updatedRestaurant = restaurantService.updateRestaurantRating(restaurant,
+        customerRating);
+    return ResponseBuilder.ok().payload(toRestaurantUpdatedResponse(restaurant))
         .build();
   }
 
@@ -193,5 +219,12 @@ public class RestaurantController {
             .stateName(restaurantEntity.getAddress().getState().getState_name());
     restaurantAddress.setState(addressState);
     return restaurantDetailsResponse.address(restaurantAddress);
+  }
+
+  private RestaurantUpdatedResponse toRestaurantUpdatedResponse(RestaurantEntity restaurantEntity) {
+    RestaurantUpdatedResponse restaurantUpdatedResponse =
+        new RestaurantUpdatedResponse().id(UUID.fromString(restaurantEntity.getUuid()))
+            .status("RESTAURANT RATING UPDATED SUCCESSFULLY");
+    return restaurantUpdatedResponse;
   }
 }
