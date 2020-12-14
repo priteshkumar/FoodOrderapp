@@ -9,10 +9,13 @@ import com.upgrad.FoodOrderingApp.service.businness.RestaurantItemService;
 import com.upgrad.FoodOrderingApp.service.businness.RestaurantService;
 import com.upgrad.FoodOrderingApp.service.entity.AddressEntity;
 import com.upgrad.FoodOrderingApp.service.entity.CategoryEntity;
+import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
 import com.upgrad.FoodOrderingApp.service.entity.ItemEntity;
 import com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity;
 import com.upgrad.FoodOrderingApp.service.entity.StateEntity;
+import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.CategoryNotFoundException;
+import com.upgrad.FoodOrderingApp.service.exception.InvalidRatingException;
 import com.upgrad.FoodOrderingApp.service.exception.RestaurantNotFoundException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -270,7 +273,7 @@ public class RestaurantControllerTest {
     verify(mockRestaurantService, times(1)).restaurantsByRating();
     verify(mockCategoryService, times(1)).getCategoriesByRestaurant(restaurantEntity.getUuid());
   }
-/*
+
   // ------------------------------------------ PUT /restaurant/{restaurant_id} ------------------------------------------
 
   //This test case passes when you are able to update restaurant rating successfully.
@@ -282,6 +285,7 @@ public class RestaurantControllerTest {
         .thenReturn(new CustomerEntity());
 
     final RestaurantEntity restaurantEntity = getRestaurantEntity();
+    restaurantEntity.setUuid(restaurantId);
     when(mockRestaurantService.restaurantByUUID(restaurantId)).thenReturn(restaurantEntity);
 
     when(mockRestaurantService.updateRestaurantRating(restaurantEntity, 4.5))
@@ -454,7 +458,7 @@ public class RestaurantControllerTest {
     verify(mockRestaurantService, times(1))
         .updateRestaurantRating(restaurantEntity, 5.5);
   }
-*/
+
   // ------------------------------------------ POJO builders ------------------------------------------
 
   private ItemEntity getItemEntity() {
