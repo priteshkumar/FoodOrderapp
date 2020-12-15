@@ -54,6 +54,17 @@ public class ItemEntity implements Entity, Identifier<Integer>, UniversalUniqueI
   @JoinColumn(name = "item_id")
   private List<CategoryItemEntity> categoryItemEntities = new ArrayList<>();
 
+  @OneToMany
+  @JoinColumn(name = "item_id")
+  private List<OrderItemEntity> orderItemEntities = new ArrayList<>();
+
+  public List<OrderItemEntity> getOrderItemEntities() {
+    return orderItemEntities;
+  }
+
+  public void setOrderItemEntities(List<OrderItemEntity> orderItemEntities) {
+    this.orderItemEntities = orderItemEntities;
+  }
 
   public List<RestaurantItemEntity> getRestaurantItems() {
     return restaurantItems;
