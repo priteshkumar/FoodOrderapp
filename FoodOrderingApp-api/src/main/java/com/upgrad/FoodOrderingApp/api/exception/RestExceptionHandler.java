@@ -5,6 +5,7 @@ import com.upgrad.FoodOrderingApp.service.exception.AddressNotFoundException;
 import com.upgrad.FoodOrderingApp.service.exception.AuthenticationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.CategoryNotFoundException;
+import com.upgrad.FoodOrderingApp.service.exception.CouponNotFoundException;
 import com.upgrad.FoodOrderingApp.service.exception.InvalidRatingException;
 import com.upgrad.FoodOrderingApp.service.exception.RestaurantNotFoundException;
 import com.upgrad.FoodOrderingApp.service.exception.SaveAddressException;
@@ -19,11 +20,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 /**
  * Global exception handler
- * <p>
- * Implements handlers for needed api access exceptions/HTTP errors Below exceptions are handled:
- * SignUpRestrictedException : HTTP 409 AuthenticationFailedException : HTTP 401
- * AuthorizationFailedException : HTTP 403 SignOutRestrictedException : HTTP 401
- * UserNotFoundException : HTTP 404 InvalidQuestionException : HTTP 404
  */
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
@@ -106,6 +102,15 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     return new ResponseEntity<ErrorResponse>(
         new ErrorResponse().code(exe.getCode()).message(exe.getErrorMessage()),
         HttpStatus.BAD_REQUEST
+    );
+  }
+
+  @ExceptionHandler(CouponNotFoundException.class)
+  public ResponseEntity<ErrorResponse> categoryException(CouponNotFoundException exe,
+      WebRequest request) {
+    return new ResponseEntity<ErrorResponse>(
+        new ErrorResponse().code(exe.getCode()).message(exe.getErrorMessage()),
+        HttpStatus.NOT_FOUND
     );
   }
 }
