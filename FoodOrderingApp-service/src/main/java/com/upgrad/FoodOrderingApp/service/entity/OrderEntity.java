@@ -78,6 +78,30 @@ public class OrderEntity implements Entity, Identifier<Integer>, UniversalUnique
   @JoinColumn(name = "restaurant_id")
   private RestaurantEntity restaurant;
 
+  @ManyToOne
+  @JoinColumn(name = "coupon_id")
+  private CouponEntity coupon;
+
+  @OneToOne
+  @JoinColumn(name="payment_id")
+  private PaymentEntity payment;
+
+  public CouponEntity getCoupon() {
+    return coupon;
+  }
+
+  public void setCoupon(CouponEntity coupon) {
+    this.coupon = coupon;
+  }
+
+  public PaymentEntity getPayment() {
+    return payment;
+  }
+
+  public void setPayment(PaymentEntity payment) {
+    this.payment = payment;
+  }
+
   @Override
   public Integer getId() {
     return id;
