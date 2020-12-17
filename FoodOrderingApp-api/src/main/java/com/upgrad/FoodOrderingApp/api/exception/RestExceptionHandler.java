@@ -7,6 +7,8 @@ import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException
 import com.upgrad.FoodOrderingApp.service.exception.CategoryNotFoundException;
 import com.upgrad.FoodOrderingApp.service.exception.CouponNotFoundException;
 import com.upgrad.FoodOrderingApp.service.exception.InvalidRatingException;
+import com.upgrad.FoodOrderingApp.service.exception.ItemNotFoundException;
+import com.upgrad.FoodOrderingApp.service.exception.PaymentMethodNotFoundException;
 import com.upgrad.FoodOrderingApp.service.exception.RestaurantNotFoundException;
 import com.upgrad.FoodOrderingApp.service.exception.SaveAddressException;
 import com.upgrad.FoodOrderingApp.service.exception.SignUpRestrictedException;
@@ -97,7 +99,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
   }
 
   @ExceptionHandler(InvalidRatingException.class)
-  public ResponseEntity<ErrorResponse> categoryException(InvalidRatingException exe,
+  public ResponseEntity<ErrorResponse> invalidRatingexception(InvalidRatingException exe,
       WebRequest request) {
     return new ResponseEntity<ErrorResponse>(
         new ErrorResponse().code(exe.getCode()).message(exe.getErrorMessage()),
@@ -106,7 +108,25 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
   }
 
   @ExceptionHandler(CouponNotFoundException.class)
-  public ResponseEntity<ErrorResponse> categoryException(CouponNotFoundException exe,
+  public ResponseEntity<ErrorResponse> couponException(CouponNotFoundException exe,
+      WebRequest request) {
+    return new ResponseEntity<ErrorResponse>(
+        new ErrorResponse().code(exe.getCode()).message(exe.getErrorMessage()),
+        HttpStatus.NOT_FOUND
+    );
+  }
+
+  @ExceptionHandler(PaymentMethodNotFoundException.class)
+  public ResponseEntity<ErrorResponse> paymentException(PaymentMethodNotFoundException exe,
+      WebRequest request) {
+    return new ResponseEntity<ErrorResponse>(
+        new ErrorResponse().code(exe.getCode()).message(exe.getErrorMessage()),
+        HttpStatus.NOT_FOUND
+    );
+  }
+
+  @ExceptionHandler(ItemNotFoundException.class)
+  public ResponseEntity<ErrorResponse> itemException(ItemNotFoundException exe,
       WebRequest request) {
     return new ResponseEntity<ErrorResponse>(
         new ErrorResponse().code(exe.getCode()).message(exe.getErrorMessage()),

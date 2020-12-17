@@ -3,7 +3,11 @@ package com.upgrad.FoodOrderingApp.service.entity;
 import com.upgrad.FoodOrderingApp.service.entity.ext.EntityEqualsBuilder;
 import com.upgrad.FoodOrderingApp.service.entity.ext.EntityHashCodeBuilder;
 import java.io.Serializable;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -82,9 +87,35 @@ public class OrderEntity implements Entity, Identifier<Integer>, UniversalUnique
   @JoinColumn(name = "coupon_id")
   private CouponEntity coupon;
 
-  @OneToOne
-  @JoinColumn(name="payment_id")
+  @ManyToOne
+  @JoinColumn(name = "payment_id")
   private PaymentEntity payment;
+
+  @Transient
+  private Set<String> itemUuids = new HashSet<>();
+
+  public OrderEntity() {
+  }
+
+  public OrderEntity(String orderId, Double bill, CouponEntity coupon, Double discount,
+      Date orderDate, PaymentEntity payment, CustomerEntity customer,
+      AddressEntity address,
+      RestaurantEntity restaurant) {
+
+    this.uuid = orderId;
+    this.bill = bill;
+    this.discount = discount;
+    this.coupon = coupon;
+    this.customer = customer;
+    this.address = address;
+    this.restaurant = restaurant;
+    this.payment = payment;
+    this.date = orderDate.toInstant().atZone(ZoneId.systemDefault());
+  }
+
+  public Set<String> getItemUuids() {
+    return itemUuids;
+  }
 
   public CouponEntity getCoupon() {
     return coupon;
@@ -181,5 +212,9 @@ public class OrderEntity implements Entity, Identifier<Integer>, UniversalUnique
   @Override
   public String toString() {
     return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
+  }
+
+  public void addItemUUID(String itemUUID) {
+    this.itemUuids.add(itemUUID);
   }
 }
