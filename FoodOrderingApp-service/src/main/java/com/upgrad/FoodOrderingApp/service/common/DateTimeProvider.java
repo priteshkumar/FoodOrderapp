@@ -21,7 +21,7 @@ public final class DateTimeProvider {
   private static final DateTimeFormatter SIMPLE_DATE_FORMAT = DateTimeFormatter
       .ofPattern("yyyy-MM-dd");
   private static final DateTimeFormatter SIMPLE_DATETIME_FORMAT = DateTimeFormatter
-      .ofPattern("yyyy-MM-dd HH:mm");
+      .ofPattern("yyyy-MM-dd HH:mm:ss:SSS");
   private static final DateTimeFormatter SIMPLE_TIME_FORMAT = DateTimeFormatter.ofPattern("HH:mm");
 
   private DateTimeProvider() {
