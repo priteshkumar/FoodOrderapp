@@ -21,8 +21,8 @@ DROP TABLE IF EXISTS PAYMENT CASCADE;
      PRIMARY KEY (id));
 */
 @javax.persistence.Entity
-@Table(name="payment",schema="public")
-public class PaymentEntity implements Entity,Identifier<Integer>,
+@Table(name = "payment", schema = "public")
+public class PaymentEntity implements Entity, Identifier<Integer>,
     UniversalUniqueIdentifier<String>, Serializable {
 
   @Id
@@ -39,6 +39,12 @@ public class PaymentEntity implements Entity,Identifier<Integer>,
   @Size(max = 255)
   private String paymentName;
 
+  public PaymentEntity() {}
+
+  public PaymentEntity(String uuid, String paymentName) {
+    this.uuid = uuid;
+    this.paymentName = paymentName;
+  }
 
   @Override
   public Integer getId() {

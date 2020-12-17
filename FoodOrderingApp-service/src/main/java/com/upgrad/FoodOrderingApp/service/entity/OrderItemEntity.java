@@ -35,7 +35,7 @@ public class OrderItemEntity implements Entity, Identifier<Integer>, Serializabl
   @NotNull
   private Integer price;
 
-  @OneToOne
+  @ManyToOne
   @JoinColumn(name = "order_id")
   @OnDelete(action = OnDeleteAction.CASCADE)
   private OrderEntity order;
