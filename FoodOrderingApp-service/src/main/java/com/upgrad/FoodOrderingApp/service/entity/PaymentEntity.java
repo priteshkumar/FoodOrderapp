@@ -1,5 +1,9 @@
 package com.upgrad.FoodOrderingApp.service.entity;
 
+import static com.upgrad.FoodOrderingApp.service.entity.PaymentEntity.BY_ALL_PAYMENTS;
+import static com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity.BY_ALL_RESTAURANTS;
+import static com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity.BY_RESTAURANT_UUID;
+
 import com.upgrad.FoodOrderingApp.service.entity.ext.EntityEqualsBuilder;
 import com.upgrad.FoodOrderingApp.service.entity.ext.EntityHashCodeBuilder;
 import java.io.Serializable;
@@ -7,6 +11,8 @@ import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -22,8 +28,14 @@ DROP TABLE IF EXISTS PAYMENT CASCADE;
 */
 @javax.persistence.Entity
 @Table(name = "payment", schema = "public")
+@NamedQueries({
+    @NamedQuery(name = BY_ALL_PAYMENTS, //
+        query = "SELECT pay FROM PaymentEntity pay")
+})
 public class PaymentEntity implements Entity, Identifier<Integer>,
     UniversalUniqueIdentifier<String>, Serializable {
+
+  public static final String BY_ALL_PAYMENTS = "PaymentEntity.byAllPayments";
 
   @Id
   @Column(name = "id")
@@ -39,7 +51,8 @@ public class PaymentEntity implements Entity, Identifier<Integer>,
   @Size(max = 255)
   private String paymentName;
 
-  public PaymentEntity() {}
+  public PaymentEntity() {
+  }
 
   public PaymentEntity(String uuid, String paymentName) {
     this.uuid = uuid;
