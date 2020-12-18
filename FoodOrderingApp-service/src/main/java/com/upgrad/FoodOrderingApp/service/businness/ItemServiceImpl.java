@@ -18,6 +18,9 @@ public class ItemServiceImpl implements ItemService {
   @Autowired
   private ItemDao itemDao;
 
+  @Autowired
+  private RestaurantItemService restaurantItemService;
+
   @Override
   public List<ItemEntity> getItemsByPopularity(RestaurantEntity restaurant) {
 
@@ -31,5 +34,11 @@ public class ItemServiceImpl implements ItemService {
       throw new ItemNotFoundException("INF-003", "No item by this id exist");
     }
     return item;
+  }
+
+  @Override
+  public List<ItemEntity> getItemsByCategoryAndRestaurant(@NotNull String restaurantId,
+      @NotNull String categoryId) {
+    return restaurantItemService.getItemsByCategoryAndRestaurant(restaurantId, categoryId);
   }
 }

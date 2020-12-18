@@ -12,4 +12,7 @@ public interface ItemService {
   public List<ItemEntity> getItemsByPopularity(@NotNull RestaurantEntity restaurant);
 
   public ItemEntity itemByUUID(@NotNull String itemId) throws ItemNotFoundException;
+
+  public List<ItemEntity> getItemsByCategoryAndRestaurant(@NotNull String restaurantId,
+      @NotNull String categoryId);
 }

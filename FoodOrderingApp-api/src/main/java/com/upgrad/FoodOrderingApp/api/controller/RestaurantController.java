@@ -17,6 +17,7 @@ import com.upgrad.FoodOrderingApp.api.model.RestaurantListResponse;
 import com.upgrad.FoodOrderingApp.api.model.RestaurantUpdatedResponse;
 import com.upgrad.FoodOrderingApp.service.businness.CategoryService;
 import com.upgrad.FoodOrderingApp.service.businness.CustomerService;
+import com.upgrad.FoodOrderingApp.service.businness.ItemService;
 import com.upgrad.FoodOrderingApp.service.businness.RestaurantItemService;
 import com.upgrad.FoodOrderingApp.service.businness.RestaurantService;
 import com.upgrad.FoodOrderingApp.service.common.ItemType;
@@ -52,7 +53,7 @@ public class RestaurantController {
   private CategoryService categoryService;
 
   @Autowired
-  private RestaurantItemService itemService;
+  private ItemService itemService;
 
   @Autowired
   private CustomerService customerService;
