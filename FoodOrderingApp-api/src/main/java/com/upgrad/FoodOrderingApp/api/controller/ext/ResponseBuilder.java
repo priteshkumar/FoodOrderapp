@@ -11,6 +11,8 @@ package com.upgrad.FoodOrderingApp.api.controller.ext;
 import static com.upgrad.FoodOrderingApp.api.controller.data.ResourceConstants.HEADER_ACCESS_TOKEN;
 import static com.upgrad.FoodOrderingApp.api.controller.data.ResourceConstants.HEADER_LOCATION;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,6 +45,9 @@ public class ResponseBuilder<T> {
 
   public ResponseBuilder<T> accessToken(final String value) {
     this.headers.add(HEADER_ACCESS_TOKEN, value);
+    List<String> header = new ArrayList<>();
+    header.add("access-token");
+    headers.setAccessControlExposeHeaders(header);
     return this;
   }
 
