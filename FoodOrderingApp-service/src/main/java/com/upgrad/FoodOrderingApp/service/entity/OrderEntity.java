@@ -1,5 +1,7 @@
 package com.upgrad.FoodOrderingApp.service.entity;
 
+import static com.upgrad.FoodOrderingApp.service.entity.OrderEntity.ORDERS_BY_ADDRESS;
+
 import com.upgrad.FoodOrderingApp.service.entity.ext.EntityEqualsBuilder;
 import com.upgrad.FoodOrderingApp.service.entity.ext.EntityHashCodeBuilder;
 import java.io.Serializable;
@@ -16,6 +18,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -49,8 +53,14 @@ date TIMESTAMP NOT NULL ,
 
 @javax.persistence.Entity
 @Table(name = "orders", schema = "public")
+@NamedQueries({ //
+    @NamedQuery(name = ORDERS_BY_ADDRESS, //
+        query = "SELECT count(o) FROM OrderEntity o WHERE o.address.uuid = :addressId")
+})
 public class OrderEntity implements Entity, Identifier<Integer>, UniversalUniqueIdentifier<String>,
     Serializable {
+
+  public final static String ORDERS_BY_ADDRESS = "OrderEntity.byAddress";
 
   @Id
   @Column(name = "id")
@@ -95,18 +105,8 @@ public class OrderEntity implements Entity, Identifier<Integer>, UniversalUnique
   private PaymentEntity payment;
 
   @OneToMany
-  @JoinColumn(name="order_id")
+  @JoinColumn(name = "order_id")
   private List<OrderItemEntity> orderItemEntityList = new ArrayList<>();
-
-  public List<OrderItemEntity> getOrderItemEntityList() {
-    return orderItemEntityList;
-  }
-
-  public void setOrderItemEntityList(
-      List<OrderItemEntity> orderItemEntityList) {
-    this.orderItemEntityList = orderItemEntityList;
-  }
-
   @Transient
   private Set<String> itemUuids = new HashSet<>();
 
@@ -127,6 +127,15 @@ public class OrderEntity implements Entity, Identifier<Integer>, UniversalUnique
     this.restaurant = restaurant;
     this.payment = payment;
     this.date = orderDate.toInstant().atZone(ZoneId.systemDefault());
+  }
+
+  public List<OrderItemEntity> getOrderItemEntityList() {
+    return orderItemEntityList;
+  }
+
+  public void setOrderItemEntityList(
+      List<OrderItemEntity> orderItemEntityList) {
+    this.orderItemEntityList = orderItemEntityList;
   }
 
   public Set<String> getItemUuids() {

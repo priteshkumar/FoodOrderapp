@@ -1,5 +1,7 @@
 package com.upgrad.FoodOrderingApp.service.dao;
 
+import static com.upgrad.FoodOrderingApp.service.entity.OrderEntity.ORDERS_BY_ADDRESS;
+
 import com.upgrad.FoodOrderingApp.service.entity.CategoryEntity_;
 import com.upgrad.FoodOrderingApp.service.entity.CategoryItemEntity;
 import com.upgrad.FoodOrderingApp.service.entity.CategoryItemEntity_;
@@ -45,6 +47,14 @@ public class OrderDaoImpl extends BaseDaoImpl<OrderEntity> implements OrderDao {
     final List<OrderEntity> payload = entityManager.createQuery(payloadQuery)
         .getResultList();
     return payload;
+  }
+
+  @Override
+  public boolean checkOrdersByAddress(@NotNull String addressId) {
+    Long orderCount =
+        (Long) entityManager.createNamedQuery(ORDERS_BY_ADDRESS)
+            .setParameter("addressId", addressId).getSingleResult();
+    return orderCount > 0 ? true : false;
   }
 
   private Predicate[] buildPredicates(final String customerId,

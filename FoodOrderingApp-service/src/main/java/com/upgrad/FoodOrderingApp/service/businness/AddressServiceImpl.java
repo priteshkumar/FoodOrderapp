@@ -27,6 +27,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class AddressServiceImpl implements AddressService {
 
   @Autowired
+  OrderService orderService;
+
+  @Autowired
   private AddressDao addressDao;
 
   @Autowired
@@ -100,6 +103,11 @@ public class AddressServiceImpl implements AddressService {
   @Override
   @Transactional(propagation = Propagation.REQUIRED)
   public AddressEntity deleteAddress(@NotNull AddressEntity addressEntity) {
+    boolean ordersExist = orderService.checkOrdersByAddressExists(addressEntity.getUuid());
+    if(ordersExist){
+      addressEntity.setActive(0);
+      return addressDao.update(addressEntity);
+    }
     return addressDao.delete(addressEntity);
   }
 

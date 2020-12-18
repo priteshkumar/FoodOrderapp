@@ -8,4 +8,6 @@ import javax.validation.constraints.NotNull;
 public interface OrderDao extends BaseDao<OrderEntity> {
 
   public List<OrderEntity> getOrdersByCustomers(@NotNull String customerId);
+
+  public boolean checkOrdersByAddress(@NotNull String addressId);
 }

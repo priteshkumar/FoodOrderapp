@@ -20,4 +20,7 @@ public interface OrderService {
   public OrderItemEntity saveOrderItem(@NotNull OrderItemEntity orderItem);
 
   public List<OrderEntity> getOrdersByCustomers(@NotNull String customerId);
+
+  public boolean checkOrdersByAddressExists(@NotNull String addressId);
+
 }

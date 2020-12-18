@@ -76,4 +76,9 @@ public class OrderServiceImpl implements OrderService {
   public List<OrderEntity> getOrdersByCustomers(@NotNull String customerId) {
     return orderDao.getOrdersByCustomers(customerId);
   }
+
+  @Override
+  public boolean checkOrdersByAddressExists(@NotNull String addressId) {
+    return orderDao.checkOrdersByAddress(addressId);
+  }
 }
