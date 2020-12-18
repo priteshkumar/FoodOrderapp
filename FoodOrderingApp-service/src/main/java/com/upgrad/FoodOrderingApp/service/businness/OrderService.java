@@ -5,6 +5,7 @@ import com.upgrad.FoodOrderingApp.service.entity.OrderEntity;
 import com.upgrad.FoodOrderingApp.service.entity.OrderItemEntity;
 import com.upgrad.FoodOrderingApp.service.exception.CouponNotFoundException;
 import com.upgrad.FoodOrderingApp.service.exception.ItemNotFoundException;
+import java.util.List;
 import javax.validation.constraints.NotNull;
 
 public interface OrderService {
@@ -17,4 +18,6 @@ public interface OrderService {
   public OrderEntity saveOrder(@NotNull OrderEntity order) throws ItemNotFoundException;
 
   public OrderItemEntity saveOrderItem(@NotNull OrderItemEntity orderItem);
+
+  public List<OrderEntity> getOrdersByCustomers(@NotNull String customerId);
 }

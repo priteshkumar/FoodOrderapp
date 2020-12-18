@@ -34,6 +34,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.UUID;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -367,7 +368,7 @@ public class OrderControllerTest {
   }
 
   // ------------------------------------------ GET /order ------------------------------------------
-    /*
+
     //This test case passes when you are able to retrieve all past orders placed by you
     @Test
     public void shouldGetPlacedOrderDetails() throws Exception {
@@ -398,8 +399,8 @@ public class OrderControllerTest {
 
         verify(mockCustomerService, times(1)).getCustomer("database_accesstoken2");
         verify(mockOrderService, times(1)).getOrdersByCustomers(customerId);
-    }*/
-    /*
+    }
+
     //This test case passes when you have handled the exception of trying to fetch placed orders if you are not logged in.
     @Test
     public void shouldNotGetPlacedOrderDetailsIfCustomerIsNotLoggedIn() throws Exception {
@@ -449,7 +450,7 @@ public class OrderControllerTest {
         verify(mockCustomerService, times(1)).getCustomer("invalid_auth");
         verify(mockOrderService, times(0)).getOrdersByCustomers(anyString());
     }
-  */
+
   // ------------------------------------------ GET /order/coupon/{coupon_name} ------------------------------------------
 
   //This test case passes when you are able to retrieve coupon details by coupon name.

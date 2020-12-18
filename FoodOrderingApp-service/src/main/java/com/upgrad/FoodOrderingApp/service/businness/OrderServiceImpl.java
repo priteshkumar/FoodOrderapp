@@ -5,11 +5,11 @@ import com.upgrad.FoodOrderingApp.service.dao.ItemDao;
 import com.upgrad.FoodOrderingApp.service.dao.OrderDao;
 import com.upgrad.FoodOrderingApp.service.dao.OrderItemDao;
 import com.upgrad.FoodOrderingApp.service.entity.CouponEntity;
-import com.upgrad.FoodOrderingApp.service.entity.ItemEntity;
 import com.upgrad.FoodOrderingApp.service.entity.OrderEntity;
 import com.upgrad.FoodOrderingApp.service.entity.OrderItemEntity;
 import com.upgrad.FoodOrderingApp.service.exception.CouponNotFoundException;
 import com.upgrad.FoodOrderingApp.service.exception.ItemNotFoundException;
+import java.util.List;
 import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -70,5 +70,10 @@ public class OrderServiceImpl implements OrderService {
   @Transactional(propagation = Propagation.REQUIRED)
   public OrderItemEntity saveOrderItem(@NotNull OrderItemEntity orderItem) {
     return orderItemDao.create(orderItem);
+  }
+
+  @Override
+  public List<OrderEntity> getOrdersByCustomers(@NotNull String customerId) {
+    return orderDao.getOrdersByCustomers(customerId);
   }
 }
