@@ -38,8 +38,4 @@ public interface CustomerService extends AuthenticationService {
   CustomerEntity updateCustomerPassword(@NotNull String oldPassword, @NotNull String newPassword,
       @NotNull CustomerEntity customerEntity) throws UpdateCustomerException;
 
-  //void changeUserStatus(@NotNull String userUuid, @NotNull UserStatus newUserStatus) throws
-  // ApplicationException;
-  void deleteCustomer(@NotNull String userUuid);
-
 }

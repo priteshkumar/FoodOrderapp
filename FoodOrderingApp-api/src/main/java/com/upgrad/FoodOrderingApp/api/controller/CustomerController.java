@@ -150,10 +150,9 @@ public class CustomerController {
 
   private CustomerEntity updateCustomerData(CustomerEntity customerEntity,
       CustomerEntity updatedCustomer) {
+
     customerEntity.setFirstName(updatedCustomer.getFirstName());
-    if (!StringUtils.isEmpty(updatedCustomer.getLastName())) {
-      customerEntity.setLastName(updatedCustomer.getLastName());
-    }
+    customerEntity.setLastName(updatedCustomer.getLastName());
     return customerEntity;
   }
 

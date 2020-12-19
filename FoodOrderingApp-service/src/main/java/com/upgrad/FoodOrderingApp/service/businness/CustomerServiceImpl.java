@@ -82,8 +82,8 @@ public class CustomerServiceImpl implements CustomerService {
     if (!verifyPasswordStrength(newCustomer.getPassword())) {
       throw new SignUpRestrictedException("SGR-004", "Weak password!");
     }
-    encryptPassword(newCustomer);
-    return customerDao.create(newCustomer);
+    CustomerEntity customer = encryptPassword(newCustomer);
+    return customerDao.create(customer);
   }
 
   @Override
@@ -105,46 +105,24 @@ public class CustomerServiceImpl implements CustomerService {
   }
 
   @Override
+  @Transactional(propagation = Propagation.REQUIRED)
   public CustomerEntity updateCustomerPassword(@NotNull String oldPassword,
       @NotNull String newPassword, @NotNull CustomerEntity customerEntity)
       throws UpdateCustomerException {
-    if(!verifyPasswordStrength(newPassword)){
-      throw new UpdateCustomerException("UCR-001","Weak password!");
+
+    if (!verifyPasswordStrength(newPassword)) {
+      throw new UpdateCustomerException("UCR-001", "Weak password!");
     }
-    if(!customerEntity.getPassword().equals(oldPassword)){
-      throw new UpdateCustomerException("UCR-004","Incorrect old password!");
+
+    String oldHashedPassword = PasswordCryptographyProvider.encrypt(oldPassword,
+        customerEntity.getSalt());
+
+    if (!customerEntity.getPassword().equals(oldHashedPassword)) {
+      throw new UpdateCustomerException("UCR-004", "Incorrect old password!");
     }
     customerEntity.setPassword(newPassword);
-    return customerDao.updateCustomer(customerEntity);
-  }
-
-  /*
-  @Override
-  @Transactional(propagation = Propagation.REQUIRED)
-  public void changeUserStatus(final String userUuid, final UserStatus newUserStatus)
-      throws ApplicationException {
-
-    final CustomerEntity existingUser = customerDao.findByUUID(userUuid);
-    if (existingUser == null) {
-      throw new EntityNotFoundException(UserErrorCode.USR_001, userUuid);
-    }
-
-    if (UserStatus.valueOf(existingUser.getStatus()) != newUserStatus) {
-      existingUser.setStatus(newUserStatus.name());
-      customerDao.update(existingUser);
-    }
-  }*/
-
-  @Override
-  public void deleteCustomer(final String userUuid) {
-
-    final CustomerEntity existingUser = customerDao.findByUUID(userUuid);
-    if (existingUser == null) {
-      //throw new EntityNotFoundException(UserErrorCode.USR_001, userUuid);
-    }
-
-    //existingUser.setStatus(UserStatus.DELETED.name());
-    //customerDao.update(existingUser);
+    CustomerEntity updatedCustomer = encryptPassword(customerEntity);
+    return customerDao.updateCustomer(updatedCustomer);
   }
 
   /*
@@ -203,7 +181,7 @@ public class CustomerServiceImpl implements CustomerService {
     password = password.trim();
     String letterPattern = ".*[A-Z]+.*";
     String digitPattern = ".*[0-9]+.*";
-    String otherCharPattern = ".*[#@$%*!^].*";
+    String otherCharPattern = ".*[#@$%&*!^].*";
     if (password.length() >= 8 && Pattern.matches(letterPattern, password) && Pattern
         .matches(digitPattern, password)
         && Pattern.matches(otherCharPattern, password)) {
@@ -212,7 +190,7 @@ public class CustomerServiceImpl implements CustomerService {
     return false;
   }
 
-  private void encryptPassword(final CustomerEntity newUser) {
+  private CustomerEntity encryptPassword(final CustomerEntity newUser) {
 
     String password = newUser.getPassword();
     if (password == null) {
@@ -222,6 +200,7 @@ public class CustomerServiceImpl implements CustomerService {
     final String[] encryptedData = passwordCryptographyProvider.encrypt(password);
     newUser.setSalt(encryptedData[0]);
     newUser.setPassword(encryptedData[1]);
+    return newUser;
   }
 
 }
