@@ -19,13 +19,6 @@ import javax.validation.constraints.Size;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-/*
-DROP TABLE IF EXISTS PAYMENT CASCADE;
-    CREATE TABLE PAYMENT(id SERIAL,
-    uuid VARCHAR(200) UNIQUE NOT NULL,
-    payment_name VARCHAR(255),
-     PRIMARY KEY (id));
-*/
 @javax.persistence.Entity
 @Table(name = "payment", schema = "public")
 @NamedQueries({

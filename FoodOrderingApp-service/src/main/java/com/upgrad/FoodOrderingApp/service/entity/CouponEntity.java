@@ -18,14 +18,6 @@ import javax.validation.constraints.Size;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-/*
-DROP TABLE IF EXISTS COUPON CASCADE;
-CREATE TABLE COUPON(id SERIAL,
-uuid VARCHAR(200) UNIQUE NOT NULL,
-coupon_name VARCHAR(255),
-percent INTEGER NOT NULL ,
-PRIMARY KEY (id));
- */
 @javax.persistence.Entity
 @Table(name = "coupon", schema = "public")
 @NamedQueries({
