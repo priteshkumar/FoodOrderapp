@@ -41,7 +41,8 @@ public class OrderDaoImpl extends BaseDaoImpl<OrderEntity> implements OrderDao {
     final Root<OrderEntity> from = payloadQuery.from(OrderEntity.class);
     final Predicate[] payloadPredicates = buildPredicates(customerId, builder,
         from);
-    payloadQuery.select(from).where(payloadPredicates);
+
+    payloadQuery.select(from).where(payloadPredicates).distinct(true);
     payloadQuery
         .orderBy(builder.desc(from.get(OrderEntity_.date)));
     final List<OrderEntity> payload = entityManager.createQuery(payloadQuery)
