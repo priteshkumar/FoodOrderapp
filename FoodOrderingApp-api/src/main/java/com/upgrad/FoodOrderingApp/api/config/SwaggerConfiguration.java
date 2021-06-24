@@ -18,6 +18,7 @@ public class SwaggerConfiguration {
 
     @Bean
     public Docket swagger() {
+        System.out.println("test log");
         return new Docket(DocumentationType.SWAGGER_2).select().apis(RequestHandlerSelectors.basePackage("com.upgrad.FoodOrderingApp.api.controller")).paths(PathSelectors.any()).build();
     }
 }
