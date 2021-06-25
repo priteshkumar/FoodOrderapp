@@ -11,6 +11,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * This Configuration integrates Swagger2 into the existing Spring Boot project.
+ * SPRING_DATASOURCE_USERNAME
+ * SPRING_DATASOURCE_PASSWORD
  */
 @Configuration
 @EnableSwagger2
