@@ -61,6 +61,16 @@ public class RestaurantController {
   @Autowired
   private CustomerService customerService;
 
+  @RequestMapping(method = GET, path = "/",
+      produces = APPLICATION_JSON_UTF8_VALUE)
+  public ResponseEntity<RestaurantListResponse> getAl() {
+
+    List<RestaurantEntity> restaurants = restaurantService.restaurantsByRating();
+    final List<RestaurantList> restaurantLists = prepareRestaurantList(restaurants);
+    return ResponseBuilder.ok().payload(new RestaurantListResponse().restaurants(restaurantLists))
+        .build();
+  }
+
   @RequestMapping(method = GET, path = "/restaurant",
       produces = APPLICATION_JSON_UTF8_VALUE)
   public ResponseEntity<RestaurantListResponse> getAll() {
