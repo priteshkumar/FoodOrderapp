@@ -10,9 +10,9 @@ spring:
 
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://ec2-52-45-179-101.compute-1.amazonaws.com:5432/d2aar5q7os63g1
-    username: ${USERNAME}
-    password: ${PASSWORD}
+    url: jdbc:postgresql://mouse.db.elephantsql.com:5432/tzwhcyns
+    username:tzwhcyns
+    password:mWmaAF8VHt-z4j0jXzdoQFpYmscFExhK
 
   jpa:
     properties:
