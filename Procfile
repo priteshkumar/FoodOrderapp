@@ -1,1 +1,1 @@
-web: java -Dserver.port=$PORT -jar FoodOrderingApp-api/target/FoodOrderingApp-api-1.0-SNAPSHOT.jar --spring.datasource.username=$SPRING_DATASOURCE_USERNAME --spring.datasource.password=$SPRING_DATASOURCE_PASSWORD
+web: java -Dserver.port=$PORT -jar FoodOrderingApp-api/target/FoodOrderingApp-api-1.0-SNAPSHOT.jar
